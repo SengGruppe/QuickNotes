@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/btnNotLvls"
+        android:icon="@drawable/notifications"
+        android:title="Prioitätsstufen" />
+    <item
+        android:id="@+id/btnNotes"
+        android:icon="@drawable/notes"
+        android:title="Notizen" />
+    <item
+        android:id="@+id/btnSettings"
+        android:icon="@drawable/settings"
+        android:title="Einstellungen" />
+</menu>

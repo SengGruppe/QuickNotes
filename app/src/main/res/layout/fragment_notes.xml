@@ -1,0 +1,45 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="notes"
+            type="io.github.senggruppe.quicknotes.core.Notes" />
+    </data>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/notes_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:genericLayout="@{@layout/note_item}"
+            app:listItem="@{notes}" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="?android:colorBackground"
+            android:fitsSystemWindows="true"
+            android:minWidth="185dp"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:iconifiedByDefault="false"
+                app:queryHint="TEST" />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:genericLayout="@{@layout/label_item}"
+                app:listItem="@{notes.labels}" />
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
+</layout>
