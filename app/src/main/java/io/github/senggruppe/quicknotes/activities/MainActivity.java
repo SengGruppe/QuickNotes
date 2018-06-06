@@ -24,9 +24,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
 
-        // inflate (w/o data binding)
+        // Inflate (w/o data binding)
         setContentView(R.layout.activity_main);
 
+        // Configure bottom navbar
         BottomNavigationView bnv = findViewById(R.id.bottom_nav);
         bnv.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == currentMenu) return true;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 if (f == null) {
-                    //Crashlytics.logException(new Exception("No menu found!"));
+                    Crashlytics.logException(new Exception("No menu found!"));
                     return true;
                 }
                 fragmentCache.put(item.getItemId(), f);
