@@ -5,6 +5,7 @@
 /build
 /captures
 .externalNativeBuild
-/app/google-services.json
 /app/build
 .idea
+google-services.json
+fabric.properties

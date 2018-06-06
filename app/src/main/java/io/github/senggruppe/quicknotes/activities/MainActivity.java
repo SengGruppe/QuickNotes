@@ -8,8 +8,8 @@ import android.util.SparseArray;
 import android.view.Menu;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.crash.FirebaseCrash;
 
+import io.fabric.sdk.android.Fabric;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotes;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotificationLevels;
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Crashlytics.getInstance().crash();
+        Fabric.with(this, new Crashlytics());
 
         // inflate (w/o data binding)
         setContentView(R.layout.activity_main);
