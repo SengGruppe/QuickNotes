@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Note implements Serializable {
     public final ObservableList<Label> labels = new ObservableArrayList<>();
-    public Serializable content;
+    public String content;
     public Date creationDate;
     public NotificationLevel level;
     public int index;
@@ -22,7 +22,7 @@ public class Note implements Serializable {
         this.creationDate = creationDate;
     }
 
-    public Note(Serializable content) {
+    public Note(String content) {
         this.content = content;
     }
 

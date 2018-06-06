@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Date;
+
+import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.Notes;
 import io.github.senggruppe.quicknotes.databinding.FragmentNotesBinding;
 
@@ -17,6 +20,12 @@ public class FragmentNotes extends Fragment {
         FragmentNotesBinding b = FragmentNotesBinding.inflate(inflater);
 
         Notes notes = new Notes();
+
+        Note n = new Note(new Date());
+        n.index = 0;
+        n.content = "Dies ist eine Testnotiz";
+        notes.add(n);
+
         b.setNotes(notes);
 
         return b.getRoot();
