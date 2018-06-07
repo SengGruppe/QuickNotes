@@ -17,5 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.PopActivity"
+            android:theme="@style/AppTheme.PopMe"/>
     </application>
+
 </manifest>
