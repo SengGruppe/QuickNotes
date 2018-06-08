@@ -8,26 +8,51 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Date;
+import java.io.IOException;
 
-import io.github.senggruppe.quicknotes.activities.MainActivity;
 import io.github.senggruppe.quicknotes.activities.PopActivity;
+import io.github.senggruppe.quicknotes.core.DataStore;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.Notes;
 import io.github.senggruppe.quicknotes.databinding.FragmentNotesBinding;
 
 public class FragmentNotes extends Fragment {
+    Notes notes;
+
+    public FragmentNotes() throws IOException, ClassNotFoundException {
+        notes = DataStore.getNotes(getActivity());
+        Note n = new Note("");
+        n.index = 0;
+        n.content = "";
+        for (int i = 0; i < 100; i++) {
+            n.content = n.content + "Dies ist eine Testnotiz\n";
+        }
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+        notes.add(n);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         FragmentNotesBinding b = FragmentNotesBinding.inflate(inflater);
-
-        Notes notes = new Notes();
-
-        Note n = new Note(new Date());
-        n.index = 0;
-        n.content = "Dies ist eine Testnotiz";
-        notes.add(n);
 
         b.setNotes(notes);
         b.AddButton.setOnClickListener(view -> {
