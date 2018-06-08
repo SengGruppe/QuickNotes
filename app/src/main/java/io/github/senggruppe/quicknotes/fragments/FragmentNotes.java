@@ -27,8 +27,22 @@ public class FragmentNotes extends Fragment {
         Notes notes;
         try {
              notes = DataStore.getNotes(getActivity());
-            Note n = new Note("Dies ist eine Testnotiz");
+            Note n = new Note("Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz");
             n.index = 0;
+
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
+            notes.add(n);
             notes.add(n);
 
             b.setNotes(notes);
