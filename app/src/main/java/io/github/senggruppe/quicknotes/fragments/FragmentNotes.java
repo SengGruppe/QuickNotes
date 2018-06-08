@@ -8,10 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.Date;
 
 import io.github.senggruppe.quicknotes.activities.MainActivity;
 import io.github.senggruppe.quicknotes.activities.PopActivity;
+import io.github.senggruppe.quicknotes.core.DataStore;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.Notes;
 import io.github.senggruppe.quicknotes.databinding.FragmentNotesBinding;
@@ -21,15 +24,18 @@ public class FragmentNotes extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         FragmentNotesBinding b = FragmentNotesBinding.inflate(inflater);
+        Notes notes;
+        try {
+             notes = DataStore.getNotes(getActivity());
+            Note n = new Note("Dies ist eine Testnotiz");
+            n.index = 0;
+            notes.add(n);
 
-        Notes notes = new Notes();
+            b.setNotes(notes);
+        }catch(Exception e){
+            Crashlytics.logException(e);
+        }
 
-        Note n = new Note(new Date());
-        n.index = 0;
-        n.content = "Dies ist eine Testnotiz";
-        notes.add(n);
-
-        b.setNotes(notes);
         b.AddButton.setOnClickListener(view -> {
             Intent i = new Intent(getActivity().getApplicationContext(), PopActivity.class);
             startActivity(i);

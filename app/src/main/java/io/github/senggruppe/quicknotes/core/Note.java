@@ -4,6 +4,7 @@ import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,12 +19,11 @@ public class Note implements Serializable {
     public int index;
     public List<Condition> conditions;
 
-    public Note(Date creationDate) {
-        this.creationDate = creationDate;
-    }
 
     public Note(String content) {
+
         this.content = content;
+        creationDate = Calendar.getInstance().getTime();
     }
 
     @Override
