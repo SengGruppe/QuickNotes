@@ -4,20 +4,20 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.Date;
-
-import io.github.senggruppe.quicknotes.activities.MainActivity;
 import io.github.senggruppe.quicknotes.activities.PopActivity;
+import io.github.senggruppe.quicknotes.component.NoteItem;
 import io.github.senggruppe.quicknotes.core.DataStore;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.Notes;
 import io.github.senggruppe.quicknotes.databinding.FragmentNotesBinding;
+import io.github.senggruppe.quicknotes.util.SimpleRecyclerAdapter;
 
 public class FragmentNotes extends Fragment {
     @Nullable
@@ -46,6 +46,8 @@ public class FragmentNotes extends Fragment {
             notes.add(n);
 
             b.setNotes(notes);
+            b.notelist.setLayoutManager(new LinearLayoutManager(getActivity()));
+            b.notelist.setAdapter(new SimpleRecyclerAdapter<>(notes, NoteItem::create));
         }catch(Exception e){
             Crashlytics.logException(e);
         }
