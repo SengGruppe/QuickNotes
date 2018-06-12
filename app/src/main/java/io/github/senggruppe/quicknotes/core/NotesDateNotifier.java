@@ -29,7 +29,7 @@ public class NotesDateNotifier extends Service {
         Intent intent = new Intent(this, MainActivity.class);
         long[] pattern = {0,300,0};
         PendingIntent pi = PendingIntent.getActivity(this,01234,intent,0);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "QuickNotes")
                 .setContentTitle(getString(R.string.NotificationReminderTitle))
                 .setContentText("Debug")
                 .setVibrate(pattern)
