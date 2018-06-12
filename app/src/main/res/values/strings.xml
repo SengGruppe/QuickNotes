@@ -2,6 +2,7 @@
     <string name="app_name">QuickNotes</string>
     <string name="note_item_creationdate">Vor %s</string>
     <string name="time_below_30s">ein paar Sekunden</string>
+    <string name="NotificationReminderTitle">Erinnerung</string>
     <string name="save_button">save</string>
     <string name="hint">please enter text</string>
     <string name="cd_note_item_expand_button">Notiz auf- oder zuklappen</string>

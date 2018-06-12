@@ -3,6 +3,8 @@
     package="io.github.senggruppe.quicknotes">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -19,6 +21,9 @@
         </activity>
         <activity android:name=".activities.PopActivity"
             android:theme="@style/AppTheme.PopMe"/>
+        <service android:name=".core.NotesDateNotifier" android:enabled="true">
+            <intent-filter> <action android:name="NOTIFICATION_SERVICE" /></intent-filter>
+        </service>
     </application>
 
 </manifest>
