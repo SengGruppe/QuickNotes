@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class DataStore {
     private static Notes notes;
-    private static ObservableList<Label> labels;
 
     public static Notes getNotes(Context ctx) throws IOException, ClassNotFoundException {
         if (notes == null) {
@@ -27,13 +26,10 @@ public class DataStore {
     }
 
     public static void addLabel(Label l){
-        labels.add(l);
+        notes.labels.add(l);
     }
 
     public static ObservableList<Label> getLabels() {
-        if(labels==null){
-            labels=notes.labels;
-        }
-        return labels;
+        return notes.labels;
     }
 }
