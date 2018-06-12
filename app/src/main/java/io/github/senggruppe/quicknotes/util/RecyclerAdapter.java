@@ -1,17 +1,18 @@
 package io.github.senggruppe.quicknotes.util;
 
 import android.content.Context;
-import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SimpleRecyclerAdapter<T, VH extends SimpleRecyclerAdapter.ViewHolder<T>> extends RecyclerView.Adapter<VH> {
-    private final ObservableList<T> list;
+import java.util.List;
+
+public class RecyclerAdapter<T, VH extends RecyclerAdapter.ViewHolder<T>> extends RecyclerView.Adapter<VH> {
+    private final List<T> list;
     private final ViewHolderProvider<VH> provider;
 
-    public SimpleRecyclerAdapter(ObservableList<T> list, ViewHolderProvider<VH> provider) {
+    public RecyclerAdapter(List<T> list, ViewHolderProvider<VH> provider) {
         this.list = list;
         this.provider = provider;
     }

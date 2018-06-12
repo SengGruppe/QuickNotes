@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.databinding.NoteItemBinding;
-import io.github.senggruppe.quicknotes.util.SimpleRecyclerAdapter;
+import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
 
-public class NoteItem extends SimpleRecyclerAdapter.ViewHolder<Note> {
+public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
     private final NoteItemBinding binding;
     private boolean isExpanded;
 
@@ -30,6 +30,10 @@ public class NoteItem extends SimpleRecyclerAdapter.ViewHolder<Note> {
 
     public boolean isExpanded() {
         return isExpanded;
+    }
+
+    public Note getNote() {
+        return binding.getNote();
     }
 
     public void expand() {
