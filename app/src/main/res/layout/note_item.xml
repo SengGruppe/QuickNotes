@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="io.github.senggruppe.quicknotes.util.Format" />
         <variable
-            name="item"
+            name="controller"
+            type="io.github.senggruppe.quicknotes.component.NoteItem" />
+
+        <variable
+            name="note"
             type="io.github.senggruppe.quicknotes.core.Note" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/note_bg"
         android:orientation="vertical"
-        android:padding="5dp"
         android:layout_margin="3dp">
         <!-- Head mit labels, Notificationlevel, buttom zum aufklappen -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="@drawable/note_bg_top"
+            android:orientation="horizontal"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp">
 
             <ScrollView
                 android:layout_width="0dp"
@@ -34,32 +41,60 @@
 
             <TextView
                 android:id="@+id/note_item_notlvl"
+                tools:text="Priostufe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <ImageView
-                android:id="@+id/note_item_expand_btn"
+                android:id="@+id/note_item_expand_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/cd_note_item_expand_button"
+                android:onClick="@{v->controller.isExpanded ? controller.collapse() : controller.expand()}"
+                android:src="@drawable/ic_expand" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/note_item_content"
-            android:text="@{item.content}"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0f0" />
+            android:background="@drawable/note_bg_mid">
+
+            <TextView
+                android:id="@+id/note_item_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="55dp"
+                android:onClick="@{v->controller.expand()}"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="@{note.content}" />
+
+            <View
+                android:id="@+id/note_item_vanishgradient"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
+                android:background="@drawable/note_vanish_gradient"
+                android:onClick="@{v->controller.expand()}" />
+        </FrameLayout>
+
         <!-- Footer -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="@drawable/note_bg_bottom"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp">
 
             <TextView
                 android:id="@+id/note_item_condition_summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="condition desc" />
+                tools:text="condition desc" />
 
             <View
                 android:layout_width="0dp"
@@ -70,7 +105,7 @@
                 android:id="@+id/note_item_creation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{Format.formatCreationDate(context, item.creationDate)}" />
+                android:text="@{Format.formatCreationDate(context, note.creationDate)}" />
         </LinearLayout>
     </LinearLayout>
 </layout>
