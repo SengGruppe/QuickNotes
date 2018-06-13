@@ -27,8 +27,8 @@ public class DataStore {
             }, new ListChangedAdapter.ItemAcceptor<Note>() {
                 @Override
                 public void accept(Note item) {
-                    if(item.audioMessage != null)
-                        item.audioMessage.delete();
+                    if(item.audioFile != null)
+                        item.audioFile.delete();
                 }
             }));
         }

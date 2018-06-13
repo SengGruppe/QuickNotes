@@ -1,9 +1,8 @@
 package io.github.senggruppe.quicknotes.core;
 
-import android.annotation.TargetApi;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
-import android.media.MediaRecorder;
+import android.media.MediaPlayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +23,8 @@ public class Note implements Serializable {
     public NotificationLevel level;
     public int index;
     public List<Condition> conditions;
-    public File audioMessage;
-
+    public File audioFile;
+    private MediaPlayer player;
 
     public Note(String content) {
         this.labels = new ObservableArrayList<Label>();
@@ -45,8 +44,8 @@ public class Note implements Serializable {
         }));
     }
 
-    public Note(String content, ObservableList<Label> labels, File audioMessage) {
-        this.audioMessage = audioMessage;
+    public Note(String content, ObservableList<Label> labels, File audioFile) {
+        this.audioFile = audioFile;
         this.content = content;
         creationDate = Calendar.getInstance().getTime();
         Note self = this;
@@ -85,5 +84,23 @@ public class Note implements Serializable {
     @Override
     public String toString() {
         return String.valueOf(content);
+    }
+
+    public void startAudio(){
+        player = new MediaPlayer();
+        try {
+            player.setDataSource(audioFile.getAbsolutePath());
+            player.prepare();
+            player.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopAudio(){
+        if (player != null) {
+            player.release();
+            player = null;
+        }
     }
 }
