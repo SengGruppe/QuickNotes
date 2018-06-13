@@ -1,8 +1,6 @@
 package io.github.senggruppe.quicknotes.activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
@@ -10,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class RecordActivity extends AppCompatActivity {
@@ -18,11 +17,10 @@ public class RecordActivity extends AppCompatActivity {
     private final int audioPermission = 200;
     private boolean permissionToRecordAccepted = false;
 
-    @TargetApi(26)
-    public RecordActivity(String name) {
+    public RecordActivity(String name) throws IOException {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
 
-            //When permission is not granted by user, show them message why this permission is needed.
+            //When permission is not granted by user, show them a message, why this permission is needed.
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
                 //Give user option to still opt-in the permissions
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, audioPermission);
@@ -41,7 +39,7 @@ public class RecordActivity extends AppCompatActivity {
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             audioMessage = new File(this.getFilesDir().getAbsolutePath() + "\\" + name + ".3gp" );
-            recorder.setOutputFile(audioMessage);
+            recorder.setOutputFile(new FileInputStream(audioMessage.getAbsolutePath()).getFD());
         }
     }
 
