@@ -6,6 +6,8 @@ import android.databinding.ObservableList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import io.github.senggruppe.quicknotes.util.ListChangedAdapter;
+
 public class DataStore {
     private static Notes notes;
 
@@ -17,6 +19,18 @@ public class DataStore {
             } catch (FileNotFoundException ignored) {
                 // then do not load...
             }
+            notes.addOnListChangedCallback(new ListChangedAdapter<>(new ListChangedAdapter.ItemAcceptor<Note>() {
+                @Override
+                public void accept(Note item) {
+
+                }
+            }, new ListChangedAdapter.ItemAcceptor<Note>() {
+                @Override
+                public void accept(Note item) {
+                    if(item.audioMessage != null)
+                        item.audioMessage.delete();
+                }
+            }));
         }
         return notes;
     }
