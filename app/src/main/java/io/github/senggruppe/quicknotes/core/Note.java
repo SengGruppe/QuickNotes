@@ -1,8 +1,12 @@
 package io.github.senggruppe.quicknotes.core;
 
+import android.annotation.TargetApi;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
+import android.media.MediaRecorder;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,16 +18,17 @@ import io.github.senggruppe.quicknotes.util.ListChangedAdapter;
  * A single note. TODO implement
  */
 public class Note implements Serializable {
-    public final ObservableList<Label> labels = new ObservableArrayList<>();
+    public final ObservableList<Label> labels;
     public String content;
     public Date creationDate;
     public NotificationLevel level;
     public int index;
     public List<Condition> conditions;
+    public File audioMessage;
 
 
     public Note(String content) {
-
+        this.labels = new ObservableArrayList<Label>();
         this.content = content;
         creationDate = Calendar.getInstance().getTime();
         Note self = this;
@@ -38,6 +43,32 @@ public class Note implements Serializable {
                 item.notes.remove(self);
             }
         }));
+    }
+
+    public Note(String content, ObservableList<Label> labels, File audioMessage) {
+        this.audioMessage = audioMessage;
+        this.content = content;
+        creationDate = Calendar.getInstance().getTime();
+        Note self = this;
+        if (labels == null){
+            this.labels = new ObservableArrayList<Label>();
+        } else {
+            this.labels = labels;
+        }
+        labels.addOnListChangedCallback(new ListChangedAdapter<>(new ListChangedAdapter.ItemAcceptor<Label>() {
+            @Override
+            public void accept(Label item) {
+                item.notes.add(self);
+            }
+        }, new ListChangedAdapter.ItemAcceptor<Label>() {
+            @Override
+            public void accept(Label item) {
+                item.notes.remove(self);
+            }
+        }));
+        for (Label label : labels) {
+            label.notes.add(this);
+        }
     }
 
     public void addLabel(String text){
