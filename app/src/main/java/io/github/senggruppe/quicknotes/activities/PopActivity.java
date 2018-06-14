@@ -1,10 +1,9 @@
 package io.github.senggruppe.quicknotes.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,8 +11,8 @@ import android.widget.EditText;
 import com.crashlytics.android.Crashlytics;
 
 import io.github.senggruppe.quicknotes.R;
-import io.github.senggruppe.quicknotes.core.DataStore;
 import io.github.senggruppe.quicknotes.core.Note;
+import io.github.senggruppe.quicknotes.core.NoteStorage;
 
 public class PopActivity extends AppCompatActivity {
 
@@ -43,7 +42,7 @@ public class PopActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(View-> {
             try {
-                DataStore.getNotes(this).add(new Note(editNote.getText().toString()));
+                NoteStorage.get(this).addNote(new Note(editNote.getText().toString()));
             }catch(Exception e){
                 Crashlytics.logException(e);
             }

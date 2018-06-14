@@ -1,12 +1,11 @@
 package io.github.senggruppe.quicknotes.core;
 
 import android.content.Context;
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableList;
 
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,13 +19,40 @@ import java.util.List;
 
 /**
  * A list of notes, including load/save functionality
- * TODO: add fields for stats about the note list (like a label list for the navbar)
  */
-public class Notes extends ObservableArrayList<Note> {
-    public final ObservableList<Label> labels = new ObservableArrayList<>();
+public class NoteStorage {
+    private static NoteStorage published;
+    private final List<Note> notes = new ArrayList<>();
 
-    public Notes() {
-        super();
+    //////////
+
+    private NoteStorage() {
+
+    }
+
+    public static NoteStorage get(Context ctx) throws IOException, ClassNotFoundException {
+        if (published == null) {
+            published = new NoteStorage();
+            try {
+                published.readFromFile(ctx);
+            } catch (FileNotFoundException ignored) {
+                // then do not load...
+            }
+        }
+        return published;
+    }
+
+    public void addNote(Note n) {
+        notes.add(n);
+    }
+
+    public void removeNote(Note n) {
+        if (n.audioFile != null) n.audioFile.delete();
+        notes.remove(n);
+    }
+
+    public List<Note> getNotes() {
+        return notes;
     }
 
     public void saveToFile(Context ctx) throws IOException {
@@ -37,7 +63,7 @@ public class Notes extends ObservableArrayList<Note> {
 
     public void write(OutputStream out) throws IOException {
         try (ObjectOutput oo = new ObjectOutputStream(out)) {
-            for (Note note : this) oo.writeObject(note);
+            for (Note note : notes) oo.writeObject(note);
         }
     }
 
@@ -55,7 +81,7 @@ public class Notes extends ObservableArrayList<Note> {
         } catch (EOFException ignored) {
             // finish
         }
-        clear();
-        addAll(tmp);
+        notes.clear();
+        notes.addAll(tmp);
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="io.github.senggruppe.quicknotes.util.Format" />
@@ -27,17 +28,17 @@
             android:paddingStart="5dp"
             android:paddingTop="5dp">
 
-            <ScrollView
+            <HorizontalScrollView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <LinearLayout
+                <android.support.design.chip.ChipGroup
                     android:id="@+id/note_item_labels"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-            </ScrollView>
+                    app:singleLine="true" />
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/note_item_notlvl"
@@ -54,6 +55,7 @@
                 android:src="@drawable/ic_expand" />
         </LinearLayout>
 
+        <!-- content -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
