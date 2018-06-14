@@ -26,6 +26,7 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
     public void bind(Note el) {
         binding.setController(this);
         binding.setNote(el);
+        binding.noteItemLabels.setChipSpacing(2);
     }
 
     public boolean isExpanded() {

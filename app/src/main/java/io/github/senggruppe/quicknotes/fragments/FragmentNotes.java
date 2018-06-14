@@ -17,42 +17,19 @@ import com.crashlytics.android.Crashlytics;
 
 import io.github.senggruppe.quicknotes.activities.PopActivity;
 import io.github.senggruppe.quicknotes.component.NoteItem;
-import io.github.senggruppe.quicknotes.core.DataStore;
-import io.github.senggruppe.quicknotes.core.Label;
-import io.github.senggruppe.quicknotes.core.Note;
-import io.github.senggruppe.quicknotes.core.Notes;
+import io.github.senggruppe.quicknotes.core.NoteStorage;
 import io.github.senggruppe.quicknotes.databinding.FragmentNotesBinding;
 import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
+import io.github.senggruppe.quicknotes.util.Utils;
 
 public class FragmentNotes extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         FragmentNotesBinding b = FragmentNotesBinding.inflate(inflater);
-        Notes notes;
         try {
-             notes = DataStore.getNotes(getActivity());
-            Note n = new Note("Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz Dies ist eine Testnotiz");
-            n.index = 0;
-
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-            notes.add(n);
-
-            b.setNotes(notes);
             b.notelist.setLayoutManager(new LinearLayoutManager(getActivity()));
-            b.notelist.setAdapter(new RecyclerAdapter<>(notes, NoteItem::create));
+            b.notelist.setAdapter(new RecyclerAdapter<>(NoteStorage.get(getActivity()).getNotes(), NoteItem::create));
 
             new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
@@ -62,8 +39,7 @@ public class FragmentNotes extends Fragment {
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    ((NoteItem) viewHolder).getNote().labels.add(new Label("Archived"));
-                    // TODO implement better handling (-> labels)
+                    Utils.showMessage(getActivity(), "TEST");
                 }
 
                 @Override

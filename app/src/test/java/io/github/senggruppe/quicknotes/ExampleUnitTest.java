@@ -1,18 +1,6 @@
 package io.github.senggruppe.quicknotes;
 
-import android.content.Context;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
-import java.io.IOException;
-import java.util.Iterator;
-
-import io.github.senggruppe.quicknotes.core.DataStore;
-import io.github.senggruppe.quicknotes.core.Label;
-import io.github.senggruppe.quicknotes.core.Note;
 
 import static org.junit.Assert.assertEquals;
 

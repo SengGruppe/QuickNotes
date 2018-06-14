@@ -1,26 +1,20 @@
 package io.github.senggruppe.quicknotes.core;
 
-import java.util.LinkedList;
-
 /**
  * A label. Text should be unique.
  * Might also contain information for styling etc.
- * <p>
- * At current state might be replaced by an ordinary String or Spannable
  */
 public class Label {
     public final String text;
-    public final LinkedList<Note> notes;
+    public final int color;
 
-    public Label(String text) {
+    public Label(String text, int color) {
         this.text = text;
-        notes=new LinkedList<Note>();
+        this.color = color;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Label)
-            return text.equals((Label)obj);
-        return false;
+        return obj instanceof Label && text.equals(((Label) obj).text);
     }
 }
