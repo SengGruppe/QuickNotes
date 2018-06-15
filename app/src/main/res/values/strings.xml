@@ -6,4 +6,5 @@
     <string name="save_button">save</string>
     <string name="hint">please enter text</string>
     <string name="cd_note_item_expand_button">Notiz auf- oder zuklappen</string>
+    <string name="datePickButtonText">Select Reminder Date</string>
 </resources>

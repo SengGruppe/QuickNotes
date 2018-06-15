@@ -1,5 +1,6 @@
 package io.github.senggruppe.quicknotes.core;
 
-//TODO implement
-class Condition {
+public interface Condition {
+    String getType();
+    String getDescription();
 }

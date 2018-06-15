@@ -8,10 +8,9 @@
     tools:context=".activities.PopActivity">
 
     <EditText
-        android:hint="@string/hint"
         android:id="@+id/noteText"
         android:layout_width="266dp"
-        android:layout_height="324dp"
+        android:layout_height="280dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -20,15 +19,29 @@
         android:inputType="textMultiLine"
         android:background="#FFFFFF"
         android:gravity="top"
+        android:hint="@string/hint"
 
 
         android:lines="6"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintBottom_toTopOf="@+id/datePickButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.656"
+        app:layout_constraintVertical_bias="0.652"
         tools:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+    <Button
+        android:id="@+id/datePickButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/datePickButtonText"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noteText" />
 
     <Button
         android:id="@+id/saveButton"
@@ -38,8 +51,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/save_button"
+        app:layout_constraintTop_toBottomOf="@+id/datePickButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>
