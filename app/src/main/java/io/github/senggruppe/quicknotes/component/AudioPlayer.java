@@ -1,16 +1,15 @@
 package io.github.senggruppe.quicknotes.component;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-
-import com.crashlytics.android.Crashlytics;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,15 +17,36 @@ import java.io.IOException;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.util.Utils;
 
-public class AudioPlayer extends LinearLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-    private final ImageView btn;
-    private final SeekBar progress;
+public class AudioPlayer extends LinearLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+    private ImageView btn;
+    private SeekBar progress;
     private final MediaPlayer player = new MediaPlayer();
     private File audioFile;
-    private boolean isPrepared;
 
     public AudioPlayer(Context context) {
         super(context);
+        init(context);
+    }
+
+    public AudioPlayer(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public AudioPlayer(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context);
+    }
+
+    public AudioPlayer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context);
+    }
+
+    public void init(Context context) {
+        player.setOnErrorListener(this);
+        player.setOnPreparedListener(this);
+
         setOrientation(HORIZONTAL);
 
         btn = new ImageView(context);
@@ -40,6 +60,7 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
         progress.setOnSeekBarChangeListener(this);
         //progress.setIndeterminate(false);
         addView(progress);
+        Utils.setViewAndChildrenEnabled(this, false);
     }
 
     public File getAudioFile() {
@@ -48,10 +69,9 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
 
     public void setAudioFile(File audioFile) throws IOException {
         this.audioFile = audioFile;
+        player.reset();
         player.setDataSource(audioFile.getAbsolutePath());
-        progress.setMax(player.getDuration());
-        progress.setProgress(0);
-        isPrepared = false;
+        player.prepareAsync();
     }
 
     /*
@@ -80,15 +100,9 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
             player.pause();
             btn.setImageResource(R.drawable.ic_play_audio);
         } else {
-            try {
-                if (!isPrepared) player.prepare();
-                player.start();
-                new ProgressUpdater();
-                btn.setImageResource(R.drawable.ic_pause_audio);
-            } catch (IOException e) {
-                new AlertDialog.Builder(view.getContext()).setTitle("Could not play audio").show();
-                Crashlytics.logException(e);
-            }
+            player.start();
+            new ProgressUpdater();
+            btn.setImageResource(R.drawable.ic_pause_audio);
         }
     }
 
@@ -109,6 +123,18 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
 
     public void release() {
         player.release();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+        return false;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        progress.setMax(player.getDuration());
+        progress.setProgress(0);
+        Utils.setViewAndChildrenEnabled(this, true);
     }
 
     private class ProgressUpdater implements Runnable {
