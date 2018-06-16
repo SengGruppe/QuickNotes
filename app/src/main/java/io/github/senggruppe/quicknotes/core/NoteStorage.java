@@ -24,8 +24,6 @@ public class NoteStorage {
     private static NoteStorage published;
     private final List<Note> notes = new ArrayList<>();
 
-    //////////
-
     private NoteStorage() {
 
     }

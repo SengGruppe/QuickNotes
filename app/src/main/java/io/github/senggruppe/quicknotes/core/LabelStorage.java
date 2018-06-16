@@ -27,8 +27,6 @@ public class LabelStorage {
     private static LabelStorage published;
     private final Set<Label> labels = new HashSet<>();
 
-    //////////
-
     private LabelStorage() {
 
     }
