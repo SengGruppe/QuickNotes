@@ -1,6 +1,7 @@
 package io.github.senggruppe.quicknotes.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 
@@ -19,5 +20,9 @@ public class Utils {
 
     public static void showMessage(Activity a, @StringRes int resId) {
         Snackbar.make(a.findViewById(R.id.snackbar_coordinator), resId, Snackbar.LENGTH_LONG).show();
+    }
+
+    public static int dpToPx(Context ctx, int dp) {
+        return (int) (dp * ctx.getResources().getDisplayMetrics().density);
     }
 }

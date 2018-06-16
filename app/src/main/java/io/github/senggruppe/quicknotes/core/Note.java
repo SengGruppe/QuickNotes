@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,12 +23,9 @@ public class Note implements Serializable {
     public NotificationLevel level;
     private final Set<Label> labels;
     public File audioFile;
-    private MediaPlayer player;
 
     public Note(String content) {
-        this.content = content;
-        labels = new HashSet<>();
-        creationDate = new Date();
+        this(content, null, null);
     }
 
     public Note(String content, @Nullable Set<Label> labels, File audioFile) {
@@ -55,23 +51,5 @@ public class Note implements Serializable {
     @Override
     public String toString() {
         return String.valueOf(content);
-    }
-
-    public void startAudio(){
-        player = new MediaPlayer();
-        try {
-            player.setDataSource(audioFile.getAbsolutePath());
-            player.prepare();
-            player.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stopAudio(){
-        if (player != null) {
-            player.release();
-            player = null;
-        }
     }
 }
