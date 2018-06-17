@@ -7,28 +7,58 @@
     android:background="@drawable/pop_bg"
     tools:context=".activities.PopActivity">
 
-    <EditText
-        android:id="@+id/noteText"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="266dp"
         android:layout_height="280dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textMultiLine"
         android:background="#FFFFFF"
         android:gravity="top"
         android:hint="@string/hint"
 
-
-        android:lines="6"
-        app:layout_constraintBottom_toTopOf="@+id/datePickButton"
+        app:layout_constraintBottom_toTopOf="@id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.652"
-        tools:textColor="@color/common_google_signin_btn_text_dark_focused" />
+        app:layout_constraintVertical_bias="0.656" >
+
+        <EditText
+            android:hint="@string/hint"
+            android:id="@+id/noteText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:lines="6"
+            tools:textColor="@color/common_google_signin_btn_text_dark_focused" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btnRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+                app:srcCompat="@drawable/ic_record"
+                tools:layout_editor_absoluteX="59dp"
+                tools:layout_editor_absoluteY="458dp"
+                android:focusable="true" />
+
+            <io.github.senggruppe.quicknotes.component.AudioPlayer
+                android:id="@+id/activity_pop_player"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/datePickButton"
