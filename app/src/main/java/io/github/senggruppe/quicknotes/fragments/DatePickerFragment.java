@@ -34,7 +34,7 @@ public class DatePickerFragment extends DialogFragment
             PopActivity popActivity = (PopActivity)activity;
             Calendar c = Calendar.getInstance();
             c.set(year,month,day);
-            popActivity.updateCalendar(c);
+            popActivity.updateDate(c);
         }
     }
 }

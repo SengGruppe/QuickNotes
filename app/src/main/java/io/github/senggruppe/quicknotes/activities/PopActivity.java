@@ -30,6 +30,7 @@ import io.github.senggruppe.quicknotes.core.Condition;
 import io.github.senggruppe.quicknotes.core.conditions.TimeCondition;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.NoteStorage;
+import io.github.senggruppe.quicknotes.fragments.TimePickerFragment;
 import io.github.senggruppe.quicknotes.util.Utils;
 import io.github.senggruppe.quicknotes.core.UserNotifier;
 import io.github.senggruppe.quicknotes.fragments.DatePickerFragment;
@@ -39,8 +40,9 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
     private File audioMessage;
     private AudioPlayer player;
 
-    @SuppressLint("ClickableViewAccessibility")
     Calendar calendar = null;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,12 +69,14 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
 
         player = findViewById(R.id.activity_pop_player);
         Button datePickButton = findViewById(R.id.datePickButton);
-
+        Button timePickButton = findViewById(R.id.timePickButton);
         datePickButton.setOnClickListener((View View) ->{
             DatePickerFragment newFragment = new DatePickerFragment();
             newFragment.show(getSupportFragmentManager(), "datePicker");
-
-
+        });
+        timePickButton.setOnClickListener(View ->{
+            TimePickerFragment newFragment = new TimePickerFragment();
+            newFragment.show(getSupportFragmentManager(),"timePicker");
         });
         saveButton.setOnClickListener(View-> {
             try {
@@ -141,7 +145,18 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
             recorder = null;
         }
     }
-    public void updateCalendar(Calendar c){
-        calendar = c;
+    public void updateDate(Calendar c){
+        if(calendar != null)
+            calendar.set(c.get(Calendar.YEAR),c.get(Calendar.MONTH),c.get(Calendar.DAY_OF_MONTH));
+        else
+            calendar = c;
+    }
+
+    public void updateTime(Calendar c) {
+        if(calendar != null) {
+            calendar.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY));
+            calendar.set(Calendar.MINUTE,c.get(Calendar.MINUTE));
+        }else
+            calendar = c;
     }
 }
