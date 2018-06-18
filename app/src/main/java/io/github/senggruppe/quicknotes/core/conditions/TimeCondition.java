@@ -6,15 +6,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.sql.Time;
 import java.util.Calendar;
 
 import io.github.senggruppe.quicknotes.core.Condition;
+import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.NotificationReceiver;
 
 public class TimeCondition implements Condition {
-    private String conditionTime ="";
+    private String conditionTime;
     private PendingIntent associatedIntend;
 
     private TimeCondition(String time,PendingIntent pi){
@@ -38,10 +40,13 @@ public class TimeCondition implements Condition {
             am.cancel(associatedIntend);
     }
 
-    public static TimeCondition SetupTimedNotification(Context caller, Calendar time){
-
+    public static TimeCondition SetupTimedNotification(Context caller, Note dataForNotes, Calendar time){
+        time.set(Calendar.SECOND,0);
         Intent intent = new Intent(caller,NotificationReceiver.class);
+        intent.setAction("actionstring" + System.currentTimeMillis());
+        intent.putExtra("Note",dataForNotes.content);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(caller, 0,intent,0);
+
         AlarmManager am = (AlarmManager)caller.getSystemService(Context.ALARM_SERVICE);
         am.setExact(AlarmManager.RTC_WAKEUP,time.getTimeInMillis(),pendingIntent);
 

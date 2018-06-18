@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -20,7 +21,7 @@ import io.github.senggruppe.quicknotes.activities.MainActivity;
 
 
 public class UserNotifier extends Service {
-
+    String note;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -28,21 +29,40 @@ public class UserNotifier extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        CreateNotification(this);
+    public int onStartCommand(Intent intent, int flags, int startId){
+        note = intent.getExtras().getString("Note");
+        if(note == null)
+            note = "";
+        CreateNotification(this,note);
+        return START_STICKY;
     }
 
-    private static void CreateNotification(Context context) {
+    private static void CreateNotification(Context context, String content) {
+        String[] split = content.split(".",1);
+        String smallText = "";
+        String bigText = "";
+        if(split.length == 2){
+            if(split[0] != null)
+                smallText = split[0];
+            if(split[1] != null){
+                bigText = split[1];
+            }
+        }
+        else if(split.length == 1){
+            if(split[0] != null)
+                smallText = split[0];
+        }
+
+
         Intent intent = new Intent(context, MainActivity.class);
         long[] pattern = {0,300,0};
         PendingIntent pi = PendingIntent.getActivity(context, 0,intent,0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Reminder")
                 .setContentTitle(context.getString(R.string.NotificationReminderTitle))
                 .setSmallIcon(R.drawable.ic_note)
-                .setContentText("Debug")
+                .setContentText(smallText)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("DebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebugDebug"))
+                        .bigText(bigText))
                 .setVibrate(pattern)
                 .setContentIntent(pi)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

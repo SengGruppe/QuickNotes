@@ -1,6 +1,7 @@
 package io.github.senggruppe.quicknotes.core;
 
 import android.media.MediaPlayer;
+import android.os.Parcelable;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -13,10 +14,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
+//TODO: Talk about Replace Serialiable with Parcelable. Seems to work faster on Android.
 /**
  * A single note.
  */
-public class Note implements Serializable {
+public class Note implements Serializable{
     public final List<Condition> conditions = new ArrayList<>();
     public String content;
     public Date creationDate;
