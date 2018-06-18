@@ -46,6 +46,10 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
     public void init(Context context) {
         player.setOnErrorListener(this);
         player.setOnPreparedListener(this);
+        player.setOnCompletionListener(mediaPlayer -> {
+            player.prepareAsync();
+            btn.setImageResource(R.drawable.ic_pause_audio);
+        });
 
         setOrientation(HORIZONTAL);
 
