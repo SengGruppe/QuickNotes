@@ -14,24 +14,29 @@ import io.github.senggruppe.quicknotes.notifications.NotificationReceiver;
 
 public class TimeCondition implements Condition {
     private String conditionTime;
-    private PendingIntent associatedIntend;
+    private String intentActionString;
+    private String noteContent;
 
-    private TimeCondition(String time, PendingIntent pi) {
+    private TimeCondition(String time, String intentActionString,String noteContent) {
         conditionTime = time;
-        associatedIntend = pi;
+        this.intentActionString = intentActionString;
+        this.noteContent = noteContent;
     }
 
     public static TimeCondition SetupTimedNotification(Context caller, Note dataForNotes, Calendar time) {
+
+        String intentActionString ="notificationIntent:" + System.currentTimeMillis();
+        String noteContent = dataForNotes.content;
         time.set(Calendar.SECOND, 0);
         Intent intent = new Intent(caller, NotificationReceiver.class);
-        intent.setAction("actionstring" + System.currentTimeMillis());
-        intent.putExtra("Note", dataForNotes.content);
+        intent.setAction(intentActionString);
+        intent.putExtra("Note", noteContent);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(caller, 0, intent, 0);
 
         AlarmManager am = (AlarmManager) caller.getSystemService(Context.ALARM_SERVICE);
         am.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
 
-        return new TimeCondition(time.getTime().toString(), pendingIntent);
+        return new TimeCondition(time.getTime().toString(), intentActionString,noteContent);
     }
 
     @Override
@@ -44,10 +49,15 @@ public class TimeCondition implements Condition {
         return conditionTime;
     }
 
-    public void cancleCondition(Context caller) {
-        AlarmManager am = (AlarmManager) caller.getSystemService(Context.ALARM_SERVICE);
-        if (am != null && associatedIntend != null)
-            am.cancel(associatedIntend);
+    public void cancleCondition(Context ctx) {
+        Intent intent = new Intent(ctx, NotificationReceiver.class);
+        intent.setAction(intentActionString);
+        intent.putExtra("Note", noteContent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
+
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        if (am != null && pendingIntent != null)
+            am.cancel(pendingIntent);
     }
 
 }
