@@ -82,7 +82,7 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
                 }
                 Condition timeCondition = TimeCondition.SetupTimedNotification(this, addedNote, calendar);
                 addedNote.conditions.add(timeCondition);
-                NoteStorage.get(this).addNote(addedNote);
+                NoteStorage.get(this).addNote(this, addedNote);
 
 
             } catch (Exception e) {
