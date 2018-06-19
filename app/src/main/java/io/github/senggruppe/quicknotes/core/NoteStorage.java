@@ -15,6 +15,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -44,9 +45,13 @@ public class NoteStorage {
         notes.add(n);
     }
 
-    public void removeNote(Note n) {
+    public void removeNote(Context ctx,Note n) throws IOException, ClassNotFoundException {
         if (n.audioFile != null) n.audioFile.delete();
         notes.remove(n);
+        Iterator<Label> it = LabelStorage.get(ctx).getLabels().iterator();
+        while (it.hasNext()){
+            it.next().notes.remove(n);
+        }
     }
 
     public List<Note> getNotes() {

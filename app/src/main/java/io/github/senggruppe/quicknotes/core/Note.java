@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -35,14 +36,19 @@ public class Note implements Serializable {
         creationDate = new Date();
         Note self = this;
         this.labels = labels == null ? new HashSet<>() : labels;
+        Iterator<Label> it= this.labels.iterator();
+        while (it.hasNext())
+            it.next().notes.add(this);
     }
 
     public void addLabel(Label l) {
         labels.add(l);
+        l.notes.add(this);
     }
 
     public void removeLabel(Label l) {
         labels.remove(l);
+        l.notes.remove(this);
     }
 
     public Set<Label> getLabels() {
