@@ -47,6 +47,7 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
         player.setOnErrorListener(this);
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(mediaPlayer -> {
+            Utils.setViewAndChildrenEnabled(this, false);
             player.prepareAsync();
             btn.setImageResource(R.drawable.ic_pause_audio);
         });
@@ -77,26 +78,6 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
         player.setDataSource(audioFile.getAbsolutePath());
         player.prepareAsync();
     }
-
-    /*
-    public void startAudio(){
-        try {
-            player.setDataSource(audioFile.getAbsolutePath());
-            player.prepare();
-            player.start();
-        } catch (IOException e) {
-            //new AlertDialog.Builder(ctx).setTitle("IOException while trying to load audio file!");
-            Crashlytics.logException(e);
-        }
-    }
-
-    public void stopAudio(){
-        if (player != null) {
-            player.release();
-            player = null;
-        }
-    }
-     */
 
     @Override
     public void onClick(View view) {
