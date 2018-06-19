@@ -36,9 +36,8 @@ public class Note implements Serializable {
         this.audioFile = audioFile;
         this.content = content;
         creationDate = new Date();
-        Note self = this;
         this.labels = labels == null ? new HashSet<>() : labels;
-        for (Label l : labels) l.notes.add(this);
+        for (Label l : this.labels) l.notes.add(this);
     }
 
     public void bindToView(NoteItem view) {
