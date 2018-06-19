@@ -16,8 +16,8 @@ import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
-    private AudioPlayer player;
     private final NoteItemBinding binding;
+    private AudioPlayer player;
     private boolean isExpanded;
 
     private NoteItem(NoteItemBinding binding) {

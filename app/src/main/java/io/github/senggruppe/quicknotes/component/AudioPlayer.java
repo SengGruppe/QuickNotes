@@ -18,9 +18,9 @@ import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 public class AudioPlayer extends LinearLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+    private final MediaPlayer player = new MediaPlayer();
     private ImageView btn;
     private SeekBar progress;
-    private final MediaPlayer player = new MediaPlayer();
     private File audioFile;
 
     public AudioPlayer(Context context) {

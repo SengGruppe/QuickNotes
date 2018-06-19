@@ -22,10 +22,15 @@
         </activity>
         <activity android:name=".activities.PopActivity"
             android:theme="@style/AppTheme.PopMe"/>
-        <receiver android:name=".core.NotificationReceiver" android:enabled="true">
+
+        <receiver
+            android:name=".notifications.NotificationReceiver"
+            android:enabled="true">
             <intent-filter> <action android:name="NOTIFICATION_SERVICE" /></intent-filter>
         </receiver>
-        <service android:name=".core.UserNotifier" android:enabled="true">
+        <service
+            android:name=".notifications.UserNotifier"
+            android:enabled="true">
             <intent-filter> <action android:name="NOTIFICATION_SERVICE" /></intent-filter>
         </service>
     </application>
