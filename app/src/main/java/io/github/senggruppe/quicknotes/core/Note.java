@@ -1,8 +1,5 @@
 package io.github.senggruppe.quicknotes.core;
 
-import android.media.MediaPlayer;
-import android.os.Parcelable;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;

@@ -1,8 +1,6 @@
 package io.github.senggruppe.quicknotes.core;
 
-import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -11,10 +9,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
-import android.widget.Toast;
-
-import java.util.Calendar;
 
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.activities.MainActivity;
@@ -29,34 +23,36 @@ public class UserNotifier extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
+    public int onStartCommand(Intent intent, int flags, int startId) {
         note = intent.getExtras().getString("Note");
-        if(note == null)
+        if (note == null) {
             note = "";
-        CreateNotification(this,note);
+        }
+        createNotification(this, note);
         return START_STICKY;
     }
 
-    private static void CreateNotification(Context context, String content) {
-        String[] split = content.split(".",1);
+    private static void createNotification(Context context, String content) {
+        String[] split = content.split(".", 1);
         String smallText = "";
         String bigText = "";
-        if(split.length == 2){
-            if(split[0] != null)
+        if (split.length == 2) {
+            if (split[0] != null) {
                 smallText = split[0];
-            if(split[1] != null){
+            }
+            if (split[1] != null) {
                 bigText = split[1];
             }
-        }
-        else if(split.length == 1){
-            if(split[0] != null)
+        } else if (split.length == 1) {
+            if (split[0] != null) {
                 smallText = split[0];
+            }
         }
 
 
         Intent intent = new Intent(context, MainActivity.class);
-        long[] pattern = {0,300,0};
-        PendingIntent pi = PendingIntent.getActivity(context, 0,intent,0);
+        long[] pattern = {0, 300, 0};
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Reminder")
                 .setContentTitle(context.getString(R.string.NotificationReminderTitle))
                 .setSmallIcon(R.drawable.ic_note)
@@ -70,7 +66,7 @@ public class UserNotifier extends Service {
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify((int)System.currentTimeMillis(),mBuilder.build());
+        notificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
     }
 
 }

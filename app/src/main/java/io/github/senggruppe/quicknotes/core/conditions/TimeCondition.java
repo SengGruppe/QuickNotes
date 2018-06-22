@@ -5,10 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
-import java.sql.Time;
 import java.util.Calendar;
 
 import io.github.senggruppe.quicknotes.core.Condition;
