@@ -23,17 +23,16 @@ public class TimeCondition implements Condition {
         this.noteContent = noteContent;
     }
 
-    public static TimeCondition SetupTimedNotification(Context caller, Note dataForNotes, Calendar time) {
-
+    public static TimeCondition setupTimedNotification(Context ctx, Note dataForNotes, Calendar time) {
         String intentActionString ="notificationIntent:" + System.currentTimeMillis();
         String noteContent = dataForNotes.content;
         time.set(Calendar.SECOND, 0);
-        Intent intent = new Intent(caller, NotificationReceiver.class);
+        Intent intent = new Intent(ctx, NotificationReceiver.class);
         intent.setAction(intentActionString);
         intent.putExtra("Note", noteContent);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(caller, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
 
-        AlarmManager am = (AlarmManager) caller.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         am.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
 
         return new TimeCondition(time.getTime().toString(), intentActionString,noteContent);

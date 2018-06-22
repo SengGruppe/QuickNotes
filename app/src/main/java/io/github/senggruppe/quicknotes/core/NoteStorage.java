@@ -17,6 +17,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.senggruppe.quicknotes.fragments.FragmentNotes;
+
 /**
  * A list of notes, including load/save functionality
  */
@@ -43,6 +45,7 @@ public class NoteStorage {
     public void addNote(Context ctx, Note n) throws IOException {
         notes.add(n);
         saveToFile(ctx);
+        FragmentNotes.notifyDataSetChanged();
     }
 
     public void removeNote(Context ctx, Note n) throws IOException, ClassNotFoundException {
@@ -50,6 +53,7 @@ public class NoteStorage {
         notes.remove(n);
         for (Label l : LabelStorage.get(ctx).getLabels()) l.notes.remove(n);
         saveToFile(ctx);
+        FragmentNotes.notifyDataSetChanged();
     }
 
     public List<Note> getNotes() {
