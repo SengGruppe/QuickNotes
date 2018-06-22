@@ -1,3 +1,6 @@
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'checkstyle'
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -59,4 +62,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+preBuild.dependsOn('checkstyle')
+assemble.dependsOn('lint')
+check.dependsOn('checkstyle')
 apply plugin: 'com.google.gms.google-services'
