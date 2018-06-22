@@ -18,9 +18,9 @@ import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 public class AudioPlayer extends LinearLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+    private final MediaPlayer player = new MediaPlayer();
     private ImageView btn;
     private SeekBar progress;
-    private final MediaPlayer player = new MediaPlayer();
     private File audioFile;
 
     public AudioPlayer(Context context) {
@@ -46,6 +46,11 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
     public void init(Context context) {
         player.setOnErrorListener(this);
         player.setOnPreparedListener(this);
+        player.setOnCompletionListener(mediaPlayer -> {
+            Utils.setViewAndChildrenEnabled(this, false);
+            player.prepareAsync();
+            btn.setImageResource(R.drawable.ic_pause_audio);
+        });
 
         setOrientation(HORIZONTAL);
 
@@ -73,26 +78,6 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
         player.setDataSource(audioFile.getAbsolutePath());
         player.prepareAsync();
     }
-
-    /*
-    public void startAudio(){
-        try {
-            player.setDataSource(audioFile.getAbsolutePath());
-            player.prepare();
-            player.start();
-        } catch (IOException e) {
-            //new AlertDialog.Builder(ctx).setTitle("IOException while trying to load audio file!");
-            Crashlytics.logException(e);
-        }
-    }
-
-    public void stopAudio(){
-        if (player != null) {
-            player.release();
-            player = null;
-        }
-    }
-     */
 
     @Override
     public void onClick(View view) {

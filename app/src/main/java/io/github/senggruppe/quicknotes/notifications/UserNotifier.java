@@ -1,4 +1,4 @@
-package io.github.senggruppe.quicknotes.core;
+package io.github.senggruppe.quicknotes.notifications;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -16,37 +16,20 @@ import io.github.senggruppe.quicknotes.activities.MainActivity;
 
 public class UserNotifier extends Service {
     String note;
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        note = intent.getExtras().getString("Note");
-        if (note == null) {
-            note = "";
-        }
-        createNotification(this, note);
-        return START_STICKY;
-    }
-
-    private static void createNotification(Context context, String content) {
+    public static void createNotification(Context context, String content) {
         String[] split = content.split(".", 1);
         String smallText = "";
         String bigText = "";
         if (split.length == 2) {
-            if (split[0] != null) {
+            if (split[0] != null)
                 smallText = split[0];
-            }
             if (split[1] != null) {
                 bigText = split[1];
             }
         } else if (split.length == 1) {
-            if (split[0] != null) {
+            if (split[0] != null)
                 smallText = split[0];
-            }
         }
 
 
@@ -67,6 +50,21 @@ public class UserNotifier extends Service {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        note = intent.getExtras().getString("Note");
+        if (note == null)
+            note = "";
+        createNotification(this, note);
+        return START_STICKY;
     }
 
 }

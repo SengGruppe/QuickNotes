@@ -1,4 +1,4 @@
-package io.github.senggruppe.quicknotes.core;
+package io.github.senggruppe.quicknotes.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         Intent toUserNotifier = new Intent(context, UserNotifier.class);
         String n = intent.getExtras().getString("Note");
         toUserNotifier.setAction("actionstring" + System.currentTimeMillis());
-        toUserNotifier.putExtra("Note",n);
+        toUserNotifier.putExtra("Note", n);
         context.startService(toUserNotifier);
     }
 }

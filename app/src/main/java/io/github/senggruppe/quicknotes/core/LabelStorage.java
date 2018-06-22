@@ -43,12 +43,14 @@ public class LabelStorage {
         return published;
     }
 
-    public void addLabel(Label l) {
+    public void addLabel(Context ctx, Label l) throws IOException {
         labels.add(l);
+        saveToFile(ctx);
     }
 
-    public void removeLabel(Label l) {
+    public void removeLabel(Context ctx, Label l) throws IOException {
         labels.remove(l);
+        saveToFile(ctx);
     }
 
     public Set<Label> getLabels() {

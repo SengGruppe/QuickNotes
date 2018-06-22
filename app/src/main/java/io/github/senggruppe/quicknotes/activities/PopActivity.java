@@ -6,12 +6,18 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+
+
 
 import com.crashlytics.android.Crashlytics;
 
@@ -24,19 +30,20 @@ import java.util.Calendar;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.component.AudioPlayer;
 import io.github.senggruppe.quicknotes.core.Condition;
-import io.github.senggruppe.quicknotes.core.conditions.TimeCondition;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.NoteStorage;
+import io.github.senggruppe.quicknotes.core.conditions.TimeCondition;
+import io.github.senggruppe.quicknotes.fragments.DatePickerFragment;
+import io.github.senggruppe.quicknotes.fragments.FragmentNotes;
 import io.github.senggruppe.quicknotes.fragments.TimePickerFragment;
 import io.github.senggruppe.quicknotes.util.Utils;
-import io.github.senggruppe.quicknotes.fragments.DatePickerFragment;
 
-public class PopActivity extends AppCompatActivity implements Utils.PermissionResultHandler {
+
+public class PopActivity extends AppCompatActivity implements Utils.PermissionResultHandler,OnMenuItemClickListener {
+    Calendar calendar = null;
     private MediaRecorder recorder;
     private File audioMessage;
     private AudioPlayer player;
-
-    Calendar calendar = null;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -64,26 +71,30 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
         FloatingActionButton btnRecord = findViewById(R.id.btnRecord);
 
         player = findViewById(R.id.activity_pop_player);
-        Button datePickButton = findViewById(R.id.datePickButton);
-        Button timePickButton = findViewById(R.id.timePickButton);
-        datePickButton.setOnClickListener(view -> {
+        Button specification_Button = findViewById(R.id.SpecifyButton);
+        Button add_Label_Button = findViewById(R.id.AddLabelButton);
+
+
+        /*datePickButton.setOnClickListener((View View) -> {
             DatePickerFragment newFragment = new DatePickerFragment();
             newFragment.show(getSupportFragmentManager(), "datePicker");
         });
-        timePickButton.setOnClickListener(view -> {
+        timePickButton.setOnClickListener(View -> {
             TimePickerFragment newFragment = new TimePickerFragment();
             newFragment.show(getSupportFragmentManager(), "timePicker");
-        });
-        saveButton.setOnClickListener(view-> {
+        });*/
+        saveButton.setOnClickListener(View -> {
             try {
                 Note addedNote = new Note(editNote.getText().toString(), null, audioMessage);
                 if (calendar == null) {
                     calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, 1);
                 }
-                Condition timeCondition = TimeCondition.SetupTimedNotification(this, addedNote, calendar);
+                Condition timeCondition = TimeCondition.setupTimedNotification(this, addedNote, calendar);
                 addedNote.conditions.add(timeCondition);
-                NoteStorage.get(this).addNote(addedNote);
+                NoteStorage.get(this).addNote(this, addedNote);
+                FragmentNotes.notifyDataSetChanged();
+
 
 
             } catch (Exception e) {
@@ -102,6 +113,31 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
             return true;
         });
     }
+    public void showPopUp(View v){
+        PopupMenu popup = new PopupMenu(this,v);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.specification_popup);
+        popup.show();
+    }
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.PopUpDateButton:
+                DatePickerFragment DateFragment = new DatePickerFragment();
+                DateFragment.show(getSupportFragmentManager(), "datePicker");
+                return true;
+
+            case R.id.PopUpTimeButton:
+                TimePickerFragment TimeFragment = new TimePickerFragment();
+                TimeFragment.show(getSupportFragmentManager(), "timePicker");
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+
 
     private void stopRecord() {
         if (recorder != null) {
@@ -163,4 +199,6 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
             calendar = c;
         }
     }
+
+
 }

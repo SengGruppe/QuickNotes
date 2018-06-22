@@ -30,10 +30,10 @@ public class DatePickerFragment extends DialogFragment
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
         Activity activity = getActivity();
-        if(activity != null && activity instanceof PopActivity){
-            PopActivity popActivity = (PopActivity)activity;
+        if (activity != null && activity instanceof PopActivity) {
+            PopActivity popActivity = (PopActivity) activity;
             Calendar c = Calendar.getInstance();
-            c.set(year,month,day);
+            c.set(year, month, day);
             popActivity.updateDate(c);
         }
     }

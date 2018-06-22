@@ -1,5 +1,6 @@
 package io.github.senggruppe.quicknotes.component;
 
+import android.support.design.chip.Chip;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,21 +9,26 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.senggruppe.quicknotes.R;
+import io.github.senggruppe.quicknotes.core.Label;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.databinding.NoteItemBinding;
 import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
-    private AudioPlayer player;
     private final NoteItemBinding binding;
+    private AudioPlayer player;
     private boolean isExpanded;
+    private final Map<Label, Chip> labelMapping = new HashMap<>();
 
     private NoteItem(NoteItemBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
+        binding.noteItemLabels.setChipSpacing(2);
     }
 
     public static NoteItem create(ViewGroup parent) {
@@ -33,7 +39,12 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
     public void bind(Note el) {
         binding.setController(this);
         binding.setNote(el);
-        binding.noteItemLabels.setChipSpacing(2);
+
+        labelMapping.clear();
+        binding.noteItemLabels.removeAllViews();
+        for (Label l : el.getLabels()) addLabel(l);
+
+        // Player
         if (el.audioFile != null) {
             if (player == null) binding.noteItemContents.addView(player = new AudioPlayer(ctx), 0);
             try {
@@ -72,5 +83,19 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
         binding.noteItemTextContent.setMaxHeight(Utils.dpToPx(ctx, 55));
         binding.noteItemVanishgradient.setVisibility(View.VISIBLE);
         binding.noteItemExpandButton.setImageResource(R.drawable.ic_expand);
+    }
+
+    public void addLabel(Label l) {
+        if (labelMapping.containsKey(l)) return;
+        Chip c = new Chip(ctx);
+        c.setText(l.text);
+        c.setBackgroundColor(l.color);
+        labelMapping.put(l, c);
+        binding.noteItemLabels.addView(c);
+    }
+
+    public void removeLabel(Label l) {
+        Chip c = labelMapping.get(l);
+        if (c != null) binding.noteItemLabels.removeView(c);
     }
 }

@@ -11,18 +11,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.github.senggruppe.quicknotes.component.NoteItem;
+
 
 //TODO: Talk about Replace Serialiable with Parcelable. Seems to work faster on Android.
+
 /**
  * A single note.
  */
-public class Note implements Serializable{
+public class Note implements Serializable {
     public final List<Condition> conditions = new ArrayList<>();
+    private final Set<Label> labels;
     public String content;
     public Date creationDate;
     public NotificationLevel level;
-    private final Set<Label> labels;
     public File audioFile;
+    private transient NoteItem boundView;
 
     public Note(String content) {
         this(content, null, null);
@@ -32,16 +36,24 @@ public class Note implements Serializable{
         this.audioFile = audioFile;
         this.content = content;
         creationDate = new Date();
-        Note self = this;
         this.labels = labels == null ? new HashSet<>() : labels;
+        for (Label l : this.labels) l.notes.add(this);
+    }
+
+    public void bindToView(NoteItem view) {
+        boundView = view;
     }
 
     public void addLabel(Label l) {
         labels.add(l);
+        l.notes.add(this);
+        if (boundView != null) boundView.addLabel(l);
     }
 
     public void removeLabel(Label l) {
         labels.remove(l);
+        l.notes.remove(this);
+        if (boundView != null) boundView.removeLabel(l);
     }
 
     public Set<Label> getLabels() {

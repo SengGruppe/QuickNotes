@@ -31,11 +31,11 @@ public class TimePickerFragment extends DialogFragment
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Activity activity = getActivity();
-        if(activity != null && activity instanceof PopActivity){
-            PopActivity popActivity = (PopActivity)activity;
+        if (activity != null && activity instanceof PopActivity) {
+            PopActivity popActivity = (PopActivity) activity;
             Calendar c = Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            c.set(Calendar.MINUTE,minute);
+            c.set(Calendar.MINUTE, minute);
             popActivity.updateTime(c);
         }
 
