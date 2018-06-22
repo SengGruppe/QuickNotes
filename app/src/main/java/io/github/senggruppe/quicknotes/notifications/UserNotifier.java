@@ -17,7 +17,7 @@ import io.github.senggruppe.quicknotes.activities.MainActivity;
 public class UserNotifier extends Service {
     String note;
 
-    private static void createNotification(Context context, String content) {
+    public static void createNotification(Context context, String content) {
         String[] split = content.split(".", 1);
         String smallText = "";
         String bigText = "";

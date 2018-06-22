@@ -24,4 +24,9 @@ public class Label {
     public boolean equals(Object obj) {
         return obj instanceof Label && text.equals(((Label) obj).text);
     }
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }
