@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -23,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
 
         // Inflate (w/o data binding)
         setContentView(R.layout.activity_main);
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 fragmentCache.put(item.getItemId(), f);
             }
+            getSupportActionBar().setDisplayHomeAsUpEnabled(item.getItemId() == R.id.btnNotes);
             getFragmentManager().beginTransaction().replace(R.id.content, f).commit();
             currentMenu = item.getItemId();
             return true;
@@ -60,6 +65,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                ((FragmentNotes) fragmentCache.get(R.id.btnNotes)).openDrawer();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
         return true;
     }
 }
