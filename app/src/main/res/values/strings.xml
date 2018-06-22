@@ -6,6 +6,6 @@
     <string name="save_button">Speichern</string>
     <string name="hint">Bitte Notiz eingeben</string>
     <string name="cd_note_item_expand_button">Notiz auf- oder zuklappen</string>
-    <string name="datePickButtonText">Datum anlegen</string>
-    <string name="timePickButtonText">Zeit anlegen</string>
+    <string name="SpecificationButton">Erinnern wenn:</string>
+    <string name="LabelButton">Label anlegen</string>
 </resources>

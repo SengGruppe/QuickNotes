@@ -62,29 +62,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2">
+
             <Button
-                android:id="@+id/datePickButton"
-                android:layout_width="wrap_content"
+                android:id="@+id/AddLabelButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="@string/datePickButtonText"
-                style="?android:attr/buttonBarButtonStyle"
+                android:text="@string/LabelButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent" />
+
             <Button
-                android:id="@+id/timePickButton"
+                android:id="@+id/SpecifyButton"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="2dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="@string/timePickButtonText"
-                style="?android:attr/buttonBarButtonStyle"
+                android:text="@string/SpecificationButton"
+                android:onClick="showPopUp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
