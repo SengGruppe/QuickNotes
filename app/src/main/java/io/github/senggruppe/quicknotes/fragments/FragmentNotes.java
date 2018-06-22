@@ -1,5 +1,6 @@
 package io.github.senggruppe.quicknotes.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -15,6 +16,9 @@ import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.io.IOException;
+import java.util.Objects;
+
 import io.github.senggruppe.quicknotes.activities.PopActivity;
 import io.github.senggruppe.quicknotes.component.NoteItem;
 import io.github.senggruppe.quicknotes.core.NoteStorage;
@@ -23,6 +27,12 @@ import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 public class FragmentNotes extends Fragment {
+    private static Runnable notifyDataSetChanged;
+
+    public static void notifyDataSetChanged() {
+        if (notifyDataSetChanged != null) notifyDataSetChanged.run();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -30,6 +40,7 @@ public class FragmentNotes extends Fragment {
         try {
             b.notelist.setLayoutManager(new LinearLayoutManager(getActivity()));
             b.notelist.setAdapter(new RecyclerAdapter<>(NoteStorage.get(getActivity()).getNotes(), NoteItem::create));
+            notifyDataSetChanged = Objects.requireNonNull(b.notelist.getAdapter())::notifyDataSetChanged;
 
             new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
@@ -39,7 +50,17 @@ public class FragmentNotes extends Fragment {
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    Utils.showMessage(getActivity(), "TEST");
+                    if (direction == ItemTouchHelper.LEFT) {
+                        Utils.showMessage(getActivity(), "Archived");
+                    } else {
+                        try {
+                            NoteStorage.get(getActivity()).removeNote(getActivity(), ((NoteItem) viewHolder).getNote());
+                        } catch (IOException | ClassNotFoundException e) {
+                            new AlertDialog.Builder(getActivity()).setTitle("Could not remove note: " + e.getMessage()).show();
+                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                        }
+                    }
                 }
 
                 @Override
