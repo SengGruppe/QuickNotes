@@ -6,12 +6,10 @@ import android.graphics.Color;
 import java.io.File;
 
 import java.time.Period;
-import java.util.Date;
 import java.util.List;
 
 import io.github.senggruppe.quicknotes.notifications.UserNotifier;
 
-import static java.lang.Thread.sleep;
 
 //TODO implement
 class NotificationLevel {
@@ -22,7 +20,7 @@ class NotificationLevel {
     Color blink;
     Period loop;
 
-    NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, Color blink, Period loop){
+    NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, Color blink, Period loop) {
         this.vibrate = vibrate;
         this.notification = notification;
         this.sound = sound;
@@ -31,7 +29,7 @@ class NotificationLevel {
         this.loop = loop;
     }
 
-    public void trigger(Context ctx){
+    public void trigger(Context ctx) {
         UserNotifier.createNotification(ctx, notification);
     }
 }

@@ -39,7 +39,7 @@ import io.github.senggruppe.quicknotes.fragments.TimePickerFragment;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 
-public class PopActivity extends AppCompatActivity implements Utils.PermissionResultHandler,OnMenuItemClickListener {
+public class PopActivity extends AppCompatActivity implements Utils.PermissionResultHandler, OnMenuItemClickListener {
     Calendar calendar = null;
     private MediaRecorder recorder;
     private File audioMessage;
@@ -71,8 +71,8 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
         FloatingActionButton btnRecord = findViewById(R.id.btnRecord);
 
         player = findViewById(R.id.activity_pop_player);
-        Button specification_Button = findViewById(R.id.SpecifyButton);
-        Button add_Label_Button = findViewById(R.id.AddLabelButton);
+        Button specificationButton = findViewById(R.id.SpecifyButton);
+        Button addLabelButton = findViewById(R.id.AddLabelButton);
 
 
         /*datePickButton.setOnClickListener((View View) -> {
@@ -113,23 +113,23 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
             return true;
         });
     }
-    public void showPopUp(View v){
-        PopupMenu popup = new PopupMenu(this,v);
+    public void showPopUp(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.specification_popup);
         popup.show();
     }
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.PopUpDateButton:
-                DatePickerFragment DateFragment = new DatePickerFragment();
-                DateFragment.show(getSupportFragmentManager(), "datePicker");
+                DatePickerFragment dateFragment = new DatePickerFragment();
+                dateFragment.show(getSupportFragmentManager(), "datePicker");
                 return true;
 
             case R.id.PopUpTimeButton:
-                TimePickerFragment TimeFragment = new TimePickerFragment();
-                TimeFragment.show(getSupportFragmentManager(), "timePicker");
+                TimePickerFragment timeFragment = new TimePickerFragment();
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
                 return true;
 
             default:

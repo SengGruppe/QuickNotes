@@ -33,7 +33,9 @@ public class FragmentNotes extends Fragment {
     private static Runnable notifyDataSetChanged;
 
     public static void notifyDataSetChanged() {
-        if (notifyDataSetChanged != null) notifyDataSetChanged.run();
+        if (notifyDataSetChanged != null) {
+            notifyDataSetChanged.run();
+        }
     }
 
     @Nullable
@@ -47,7 +49,8 @@ public class FragmentNotes extends Fragment {
 
             new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
-                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                      @NonNull RecyclerView.ViewHolder target) {
                     return true;
                 }
 
@@ -67,7 +70,8 @@ public class FragmentNotes extends Fragment {
                 }
 
                 @Override
-                public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                        float dX, float dY, int actionState, boolean isCurrentlyActive) {
                     getDefaultUIUtil().onDraw(c, recyclerView, ((NoteItem) viewHolder).itemView, dX, dY, actionState, isCurrentlyActive);
                 }
             }).attachToRecyclerView(b.notelist);

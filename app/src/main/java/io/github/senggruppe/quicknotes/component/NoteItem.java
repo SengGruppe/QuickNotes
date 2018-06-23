@@ -42,11 +42,15 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
 
         labelMapping.clear();
         binding.noteItemLabels.removeAllViews();
-        for (Label l : el.getLabels()) addLabel(l);
+        for (Label l : el.getLabels()) {
+            addLabel(l);
+        }
 
         // Player
         if (el.audioFile != null) {
-            if (player == null) binding.noteItemContents.addView(player = new AudioPlayer(ctx), 0);
+            if (player == null) {
+                binding.noteItemContents.addView(player = new AudioPlayer(ctx), 0);
+            }
             try {
                 player.setAudioFile(el.audioFile);
             } catch (IOException e) {
@@ -86,7 +90,9 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
     }
 
     public void addLabel(Label l) {
-        if (labelMapping.containsKey(l)) return;
+        if (labelMapping.containsKey(l)) {
+            return;
+        }
         Chip c = new Chip(ctx);
         c.setText(l.text);
         c.setBackgroundColor(l.color);
@@ -96,6 +102,8 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
 
     public void removeLabel(Label l) {
         Chip c = labelMapping.get(l);
-        if (c != null) binding.noteItemLabels.removeView(c);
+        if (c != null) {
+            binding.noteItemLabels.removeView(c);
+        }
     }
 }

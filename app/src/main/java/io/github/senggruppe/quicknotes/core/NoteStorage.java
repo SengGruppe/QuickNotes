@@ -49,9 +49,13 @@ public class NoteStorage {
     }
 
     public void removeNote(Context ctx, Note n) throws IOException, ClassNotFoundException {
-        if (n.audioFile != null) n.audioFile.delete();
+        if (n.audioFile != null) {
+            n.audioFile.delete();
+        }
         notes.remove(n);
-        for (Label l : LabelStorage.get(ctx).getLabels()) l.notes.remove(n);
+        for (Label l : LabelStorage.get(ctx).getLabels()) {
+            l.notes.remove(n);
+        }
         saveToFile(ctx);
         FragmentNotes.notifyDataSetChanged();
     }
@@ -68,7 +72,9 @@ public class NoteStorage {
 
     public void write(OutputStream out) throws IOException {
         try (ObjectOutput oo = new ObjectOutputStream(out)) {
-            for (Note note : notes) oo.writeObject(note);
+            for (Note note : notes) {
+                oo.writeObject(note);
+            }
         }
     }
 
@@ -82,7 +88,9 @@ public class NoteStorage {
         List<Note> tmp = new ArrayList<>();
         try (ObjectInput oi = new ObjectInputStream(in)) {
             //noinspection InfiniteLoopStatement - will get broken by EOF
-            while (true) tmp.add((Note) oi.readObject());
+            while (true) {
+                tmp.add((Note) oi.readObject());
+            }
         } catch (EOFException ignored) {
             // finish
         }

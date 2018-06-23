@@ -34,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         // Configure bottom navbar
         BottomNavigationView bnv = findViewById(R.id.bottom_nav);
         bnv.setOnNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == currentMenu) return true;
+            if (item.getItemId() == currentMenu) {
+                return true;
+            }
             Fragment f = fragmentCache.get(item.getItemId());
             if (f == null) {
                 switch (item.getItemId()) {

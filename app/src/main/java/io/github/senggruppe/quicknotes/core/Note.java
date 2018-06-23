@@ -37,7 +37,9 @@ public class Note implements Serializable {
         this.content = content;
         creationDate = new Date();
         this.labels = labels == null ? new HashSet<>() : labels;
-        for (Label l : this.labels) l.notes.add(this);
+        for (Label l : this.labels) {
+            l.notes.add(this);
+        }
     }
 
     public void bindToView(NoteItem view) {
@@ -47,13 +49,17 @@ public class Note implements Serializable {
     public void addLabel(Label l) {
         labels.add(l);
         l.notes.add(this);
-        if (boundView != null) boundView.addLabel(l);
+        if (boundView != null) {
+            boundView.addLabel(l);
+        }
     }
 
     public void removeLabel(Label l) {
         labels.remove(l);
         l.notes.remove(this);
-        if (boundView != null) boundView.removeLabel(l);
+        if (boundView != null) {
+            boundView.removeLabel(l);
+        }
     }
 
     public Set<Label> getLabels() {

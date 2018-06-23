@@ -65,7 +65,9 @@ public class LabelStorage {
 
     public void write(OutputStream out) throws IOException {
         try (ObjectOutput oo = new ObjectOutputStream(out)) {
-            for (Label note : labels) oo.writeObject(note);
+            for (Label note : labels) {
+                oo.writeObject(note);
+            }
         }
     }
 
@@ -79,7 +81,9 @@ public class LabelStorage {
         List<Label> tmp = new ArrayList<>();
         try (ObjectInput oi = new ObjectInputStream(in)) {
             //noinspection InfiniteLoopStatement - will get broken by EOF
-            while (true) tmp.add((Label) oi.readObject());
+            while (true) {
+                tmp.add((Label) oi.readObject());
+            }
         } catch (EOFException ignored) {
             // finish
         }

@@ -17,14 +17,14 @@ public class TimeCondition implements Condition {
     private String intentActionString;
     private String noteContent;
 
-    private TimeCondition(String time, String intentActionString,String noteContent) {
+    private TimeCondition(String time, String intentActionString, String noteContent) {
         conditionTime = time;
         this.intentActionString = intentActionString;
         this.noteContent = noteContent;
     }
 
     public static TimeCondition setupTimedNotification(Context ctx, Note dataForNotes, Calendar time) {
-        String intentActionString ="notificationIntent:" + System.currentTimeMillis();
+        String intentActionString = "notificationIntent:" + System.currentTimeMillis();
         String noteContent = dataForNotes.content;
         time.set(Calendar.SECOND, 0);
         Intent intent = new Intent(ctx, NotificationReceiver.class);
@@ -35,7 +35,7 @@ public class TimeCondition implements Condition {
         AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         am.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
 
-        return new TimeCondition(time.getTime().toString(), intentActionString,noteContent);
+        return new TimeCondition(time.getTime().toString(), intentActionString, noteContent);
     }
 
     @Override
@@ -55,8 +55,9 @@ public class TimeCondition implements Condition {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
 
         AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-        if (am != null && pendingIntent != null)
+        if (am != null && pendingIntent != null) {
             am.cancel(pendingIntent);
+        }
     }
 
 }

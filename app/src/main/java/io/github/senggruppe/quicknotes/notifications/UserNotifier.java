@@ -22,14 +22,16 @@ public class UserNotifier extends Service {
         String smallText = "";
         String bigText = "";
         if (split.length == 2) {
-            if (split[0] != null)
+            if (split[0] != null) {
                 smallText = split[0];
+            }
             if (split[1] != null) {
                 bigText = split[1];
             }
         } else if (split.length == 1) {
-            if (split[0] != null)
+            if (split[0] != null) {
                 smallText = split[0];
+            }
         }
 
 
@@ -61,8 +63,9 @@ public class UserNotifier extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         note = intent.getExtras().getString("Note");
-        if (note == null)
+        if (note == null) {
             note = "";
+        }
         createNotification(this, note);
         return START_STICKY;
     }

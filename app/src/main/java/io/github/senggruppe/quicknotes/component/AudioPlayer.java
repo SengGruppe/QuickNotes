@@ -17,7 +17,8 @@ import java.io.IOException;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.util.Utils;
 
-public class AudioPlayer extends LinearLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+public class AudioPlayer extends LinearLayout
+        implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
     private final MediaPlayer player = new MediaPlayer();
     private ImageView btn;
     private SeekBar progress;
@@ -60,7 +61,7 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
         btn.setOnClickListener(this);
         addView(btn);
 
-        progress = new SeekBar(context);//, null, android.R.attr.progressBarStyleHorizontal);
+        progress = new SeekBar(context); //, null, android.R.attr.progressBarStyleHorizontal);
         progress.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
         progress.setOnSeekBarChangeListener(this);
         //progress.setIndeterminate(false);
@@ -131,7 +132,9 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener, S
 
         @Override
         public void run() {
-            if (!player.isPlaying()) return;
+            if (!player.isPlaying()) {
+                return;
+            }
             progress.setProgress(player.getDuration());
             h.postDelayed(this, 500);
         }

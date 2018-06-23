@@ -37,7 +37,7 @@ public class RecyclerAdapter<T, VH extends RecyclerAdapter.ViewHolder<T>> extend
         VH create(ViewGroup parent);
     }
 
-    public static abstract class ViewHolder<T> extends RecyclerView.ViewHolder {
+    public abstract static class ViewHolder<T> extends RecyclerView.ViewHolder {
         protected Context ctx;
 
         public ViewHolder(View itemView) {
