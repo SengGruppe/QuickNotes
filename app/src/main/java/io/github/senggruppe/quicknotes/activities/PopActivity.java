@@ -17,14 +17,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-
-
 import com.crashlytics.android.Crashlytics;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.util.Calendar;
 
 import io.github.senggruppe.quicknotes.R;

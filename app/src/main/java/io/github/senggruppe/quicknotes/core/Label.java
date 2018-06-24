@@ -15,7 +15,7 @@ public class Label {
     public Label(String text, int color) {
         this.text = text;
         this.color = color;
-        notes = new HashSet<Note>();
+        notes = new HashSet<>();
     }
 
     @Override

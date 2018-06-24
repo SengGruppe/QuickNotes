@@ -6,36 +6,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
-public class RecyclerAdapter<T, VH extends RecyclerAdapter.ViewHolder<T>> extends RecyclerView.Adapter<VH> {
-    private final List<T> list;
-    private final ViewHolderProvider<VH> provider;
-
-    public RecyclerAdapter(List<T> list, ViewHolderProvider<VH> provider) {
-        this.list = list;
-        this.provider = provider;
-    }
-
+public abstract class RecyclerAdapter<T, VH extends RecyclerAdapter.ViewHolder<T>> extends RecyclerView.Adapter<VH> {
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return provider.create(parent);
+        return createView(parent);
     }
+
+    public abstract VH createView(ViewGroup parent);
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        holder.bind(list.get(position));
+        holder.bind(getItemAt(holder.ctx, position));
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
-    public interface ViewHolderProvider<VH> {
-        VH create(ViewGroup parent);
-    }
+    public abstract T getItemAt(Context ctx, int position);
 
     public abstract static class ViewHolder<T> extends RecyclerView.ViewHolder {
         protected Context ctx;

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.senggruppe.quicknotes.R;
+import io.github.senggruppe.quicknotes.util.function.Consumer;
 
 public class Utils {
     private static Runnable onSuccess;

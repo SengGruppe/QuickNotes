@@ -2,12 +2,13 @@ package io.github.senggruppe.quicknotes.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -21,9 +22,11 @@ import com.crashlytics.android.Crashlytics;
 import java.io.IOException;
 import java.util.Objects;
 
-import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.activities.PopActivity;
 import io.github.senggruppe.quicknotes.component.NoteItem;
+import io.github.senggruppe.quicknotes.core.Label;
+import io.github.senggruppe.quicknotes.core.LabelStorage;
+import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.NoteStorage;
 import io.github.senggruppe.quicknotes.databinding.FragmentNotesBinding;
 import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
@@ -38,13 +41,30 @@ public class FragmentNotes extends Fragment {
         }
     }
 
+    private FragmentNotesBinding b;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        FragmentNotesBinding b = FragmentNotesBinding.inflate(inflater);
+        b = FragmentNotesBinding.inflate(inflater);
         try {
             b.notelist.setLayoutManager(new LinearLayoutManager(getActivity()));
-            b.notelist.setAdapter(new RecyclerAdapter<>(NoteStorage.get(getActivity()).getNotes(), NoteItem::create));
+            b.notelist.setAdapter(new RecyclerAdapter<Note, NoteItem>(NoteStorage.get(getActivity()).getNotes(), NoteItem::create) {
+                @Override
+                public int getItemCount() {
+                    return 0;
+                }
+
+                @Override
+                public  createView(ViewGroup parent) {
+                    return NoteItem.create(parent);
+                }
+
+                @Override
+                public Object getItemAt(Context ctx, int position) {
+                    return null;
+                }
+            });
             notifyDataSetChanged = Objects.requireNonNull(b.notelist.getAdapter())::notifyDataSetChanged;
 
             new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -75,6 +95,16 @@ public class FragmentNotes extends Fragment {
                     getDefaultUIUtil().onDraw(c, recyclerView, ((NoteItem) viewHolder).itemView, dX, dY, actionState, isCurrentlyActive);
                 }
             }).attachToRecyclerView(b.notelist);
+
+            try {
+                LabelStorage.get(getActivity()).addLabel(getActivity(), new Label("TEST", Color.RED));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            b.labelSelector.labels = LabelStorage.get(getActivity()).getLabels();
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
@@ -88,6 +118,6 @@ public class FragmentNotes extends Fragment {
     }
 
     public void openDrawer() {
-        ((DrawerLayout) getView().findViewById(R.id.label_drawer)).openDrawer(Gravity.START);
+        b.labelDrawer.openDrawer(Gravity.START);
     }
 }
