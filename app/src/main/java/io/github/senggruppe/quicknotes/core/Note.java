@@ -32,6 +32,11 @@ public class Note implements Serializable {
         this(content, null, null);
     }
 
+    public Note(String content, @Nullable Set<Label> labels, File audioFile, NotificationLevel level) {
+        this(content, labels, audioFile);
+        this.level = level;
+    }
+
     public Note(String content, @Nullable Set<Label> labels, File audioFile) {
         this.audioFile = audioFile;
         this.content = content;

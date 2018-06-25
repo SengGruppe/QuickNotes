@@ -1,14 +1,11 @@
 package io.github.senggruppe.quicknotes.core;
 
-import android.content.Context;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 
 import java.io.File;
-
 import java.time.Period;
 import java.util.List;
-
-import io.github.senggruppe.quicknotes.notifications.UserNotifier;
 
 
 //TODO implement
@@ -19,6 +16,8 @@ class NotificationLevel {
     List<Label> showLabels;
     Color blink;
     Period loop;
+    int howOften;
+    MediaPlayer player = new MediaPlayer();
 
     NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, Color blink, Period loop) {
         this.vibrate = vibrate;
@@ -27,9 +26,16 @@ class NotificationLevel {
         this.showLabels = showLabels;
         this.blink = blink;
         this.loop = loop;
+        howOften = 1;
     }
 
-    public void trigger(Context ctx) {
-        UserNotifier.createNotification(ctx, notification);
+    NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, Color blink, Period loop, int howOften) {
+        this.vibrate = vibrate;
+        this.notification = notification;
+        this.sound = sound;
+        this.showLabels = showLabels;
+        this.blink = blink;
+        this.loop = loop;
+        this.howOften = howOften;
     }
 }
