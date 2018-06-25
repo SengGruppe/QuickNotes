@@ -1,7 +1,6 @@
 package io.github.senggruppe.quicknotes.core;
 
 import android.graphics.Color;
-import android.media.MediaPlayer;
 
 import java.io.File;
 import java.time.Period;
