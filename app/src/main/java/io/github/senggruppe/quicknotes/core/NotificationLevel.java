@@ -17,7 +17,6 @@ class NotificationLevel {
     Color blink;
     Period loop;
     int howOften;
-    MediaPlayer player = new MediaPlayer();
 
     NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, Color blink, Period loop) {
         this.vibrate = vibrate;
