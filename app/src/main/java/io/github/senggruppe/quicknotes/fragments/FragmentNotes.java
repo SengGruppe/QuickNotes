@@ -20,8 +20,10 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
+import io.github.senggruppe.quicknotes.activities.MainActivity;
 import io.github.senggruppe.quicknotes.activities.PopActivity;
 import io.github.senggruppe.quicknotes.component.NoteItem;
 import io.github.senggruppe.quicknotes.core.Label;
@@ -29,6 +31,7 @@ import io.github.senggruppe.quicknotes.core.LabelStorage;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.NoteStorage;
 import io.github.senggruppe.quicknotes.databinding.FragmentNotesBinding;
+import io.github.senggruppe.quicknotes.util.FilteredList;
 import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
 import io.github.senggruppe.quicknotes.util.Utils;
 
@@ -48,6 +51,13 @@ public class FragmentNotes extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         b = FragmentNotesBinding.inflate(inflater);
         try {
+            List<Note> filtered = new FilteredList<Note>(NoteStorage.get(getActivity()).getNotes()) {
+                @Override
+                public boolean allow(Note el) {
+                    return el.content.contains(((MainActivity) getActivity()).getSearchText());
+                }
+            };
+
             b.notelist.setLayoutManager(new LinearLayoutManager(getActivity()));
             b.notelist.setAdapter(new RecyclerAdapter<Note, NoteItem>() {
                 @NonNull
@@ -58,22 +68,12 @@ public class FragmentNotes extends Fragment {
 
                 @Override
                 public int getItemCount() {
-                    try {
-                        return NoteStorage.get(getActivity()).getNotes().size();
-                    } catch (IOException | ClassNotFoundException e) {
-                        Crashlytics.logException(e);
-                        return 0;
-                    }
+                    return filtered.size();
                 }
 
                 @Override
                 public Note getItemAt(Context ctx, int position) {
-                    try {
-                        return NoteStorage.get(ctx).getNotes().get(position);
-                    } catch (IOException | ClassNotFoundException e) {
-                        Crashlytics.logException(e);
-                        return new Note("");
-                    }
+                    return filtered.get(position);
                 }
             });
             notifyDataSetChanged = Objects.requireNonNull(b.notelist.getAdapter())::notifyDataSetChanged;

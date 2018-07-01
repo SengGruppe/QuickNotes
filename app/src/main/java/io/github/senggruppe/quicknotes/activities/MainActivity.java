@@ -7,25 +7,33 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.crashlytics.android.Crashlytics;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import io.fabric.sdk.android.Fabric;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotes;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotificationLevels;
 import io.github.senggruppe.quicknotes.fragments.FragmentSettings;
+import io.github.senggruppe.quicknotes.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
     private final SparseArray<Fragment> fragmentCache = new SparseArray<>();
     int currentMenu;
+    private String searchText = "";
+    public final List<Consumer<String>> searchUpdaters = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
 
         // Inflate (w/o data binding)
@@ -67,7 +75,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu);
-        return true;
+
+        SearchView searchView = Objects.requireNonNull((SearchView) menu.findItem(R.id.actionbar_search).getActionView());
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                searchText = s;
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -80,5 +104,9 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    public String getSearchText() {
+        return searchText;
     }
 }
