@@ -1,23 +1,28 @@
 package io.github.senggruppe.quicknotes.component;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.core.Label;
 import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
 
 public class LabelSelector extends RecyclerView {
     public Collection<Label> labels = Collections.emptyList();
+    private Collection<Label> selected = new ArrayList<>();
 
     public LabelSelector(@NonNull Context context) {
         super(context);
@@ -35,11 +40,12 @@ public class LabelSelector extends RecyclerView {
     }
 
     private void init(Context ctx) {
+        setLayoutManager(new LinearLayoutManager(ctx));
         setAdapter(new RecyclerAdapter<Label, LabelItem>() {
             @NonNull
             @Override
             public LabelItem onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                return LabelItem.create(viewGroup);
+                return new LabelItem(new CheckBox(viewGroup.getContext()));
             }
 
             @Override
@@ -58,23 +64,31 @@ public class LabelSelector extends RecyclerView {
         });
     }
 
-    private static class LabelItem extends RecyclerAdapter.ViewHolder<Label> {
+    public Collection<Label> getSelected() {
+        return Collections.unmodifiableCollection(selected);
+    }
+
+    private class LabelItem extends RecyclerAdapter.ViewHolder<Label> {
         private final CheckBox cb;
 
-        private LabelItem(LinearLayout itemView) {
+        private LabelItem(CheckBox itemView) {
             super(itemView);
-            itemView.setOrientation(LinearLayout.HORIZONTAL);
-            itemView.addView(cb = new CheckBox(ctx));
+            cb = itemView;
+            cb.setBackground(ctx.getDrawable(R.drawable.labelselector_label_bg));
         }
 
-        static LabelItem create(ViewGroup parent) {
-            return new LabelItem(new LinearLayout(parent.getContext()));
-        }
-
+        @SuppressLint("SetTextI18n")
         @Override
         public void bind(Label el) {
-            cb.setText(el.text);
-            cb.setBackgroundColor(el.color);
+            cb.setText(el.text + ' ');
+            cb.getBackground().setColorFilter(el.color, PorterDuff.Mode.MULTIPLY);
+            cb.setOnCheckedChangeListener((compoundButton, b) -> {
+                if (b) {
+                    selected.add(el);
+                } else {
+                    selected.remove(el);
+                }
+            });
         }
     }
 }

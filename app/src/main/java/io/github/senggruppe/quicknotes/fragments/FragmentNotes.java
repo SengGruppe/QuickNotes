@@ -108,7 +108,7 @@ public class FragmentNotes extends Fragment {
             }).attachToRecyclerView(b.notelist);
 
             try {
-                LabelStorage.get(getActivity()).addLabel(getActivity(), new Label("TEST", Color.RED));
+                LabelStorage.get(getActivity()).addLabel(getActivity(), new Label("TEST", Color.GREEN));
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

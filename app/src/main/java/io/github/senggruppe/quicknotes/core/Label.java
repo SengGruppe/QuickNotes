@@ -1,5 +1,6 @@
 package io.github.senggruppe.quicknotes.core;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,7 +8,7 @@ import java.util.Set;
  * A label. Text should be unique.
  * Might also contain information for styling etc.
  */
-public class Label {
+public class Label implements Serializable {
     public final String text;
     public final int color;
     public final Set<Note> notes;
