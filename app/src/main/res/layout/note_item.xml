@@ -3,14 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="io.github.senggruppe.quicknotes.util.Format" />
         <variable
             name="controller"
             type="io.github.senggruppe.quicknotes.component.NoteItem" />
-
-        <variable
-            name="note"
-            type="io.github.senggruppe.quicknotes.core.Note" />
     </data>
 
     <LinearLayout
@@ -26,7 +21,8 @@
             android:orientation="horizontal"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            android:paddingTop="5dp">
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp" >
 
             <HorizontalScrollView
                 android:layout_width="0dp"
@@ -47,6 +43,13 @@
                 android:layout_height="wrap_content" />
 
             <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{v->controller.editNote()}"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@string/cd_note_item_edit_button" />
+
+            <ImageView
                 android:id="@+id/note_item_expand_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +62,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/note_bg_mid">
+            android:background="@drawable/note_bg_mid"
+            android:onClick="@{v->controller.isExpanded ? controller.editNote() : controller.expand()}" >
 
             <LinearLayout
                 android:id="@+id/note_item_contents"
@@ -72,10 +76,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxHeight="55dp"
-                    android:onClick="@{v->controller.expand()}"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp"
-                    android:text="@{note.content}" />
+                    android:paddingStart="5dp" />
             </LinearLayout>
 
             <View
@@ -85,8 +87,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginEnd="2dp"
                 android:layout_marginStart="2dp"
-                android:background="@drawable/note_vanish_gradient"
-                android:onClick="@{v->controller.expand()}" />
+                android:background="@drawable/note_vanish_gradient" />
         </FrameLayout>
 
         <!-- Footer -->
@@ -113,8 +114,7 @@
             <TextView
                 android:id="@+id/note_item_creation"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{Format.formatCreationDate(context, note.creationDate)}" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 </layout>

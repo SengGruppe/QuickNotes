@@ -49,20 +49,31 @@ public class FragmentNotes extends Fragment {
         b = FragmentNotesBinding.inflate(inflater);
         try {
             b.notelist.setLayoutManager(new LinearLayoutManager(getActivity()));
-            b.notelist.setAdapter(new RecyclerAdapter<Note, NoteItem>(NoteStorage.get(getActivity()).getNotes(), NoteItem::create) {
+            b.notelist.setAdapter(new RecyclerAdapter<Note, NoteItem>() {
+                @NonNull
+                @Override
+                public NoteItem onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                    return NoteItem.create(viewGroup);
+                }
+
                 @Override
                 public int getItemCount() {
-                    return 0;
+                    try {
+                        return NoteStorage.get(getActivity()).getNotes().size();
+                    } catch (IOException | ClassNotFoundException e) {
+                        Crashlytics.logException(e);
+                        return 0;
+                    }
                 }
 
                 @Override
-                public  createView(ViewGroup parent) {
-                    return NoteItem.create(parent);
-                }
-
-                @Override
-                public Object getItemAt(Context ctx, int position) {
-                    return null;
+                public Note getItemAt(Context ctx, int position) {
+                    try {
+                        return NoteStorage.get(ctx).getNotes().get(position);
+                    } catch (IOException | ClassNotFoundException e) {
+                        Crashlytics.logException(e);
+                        return new Note("");
+                    }
                 }
             });
             notifyDataSetChanged = Objects.requireNonNull(b.notelist.getAdapter())::notifyDataSetChanged;
@@ -98,9 +109,7 @@ public class FragmentNotes extends Fragment {
 
             try {
                 LabelStorage.get(getActivity()).addLabel(getActivity(), new Label("TEST", Color.RED));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 

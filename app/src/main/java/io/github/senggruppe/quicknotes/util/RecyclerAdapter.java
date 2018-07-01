@@ -4,17 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 
+/**
+ * A small adapter that
+ */
 public abstract class RecyclerAdapter<T, VH extends RecyclerAdapter.ViewHolder<T>> extends RecyclerView.Adapter<VH> {
-    @NonNull
-    @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return createView(parent);
-    }
-
-    public abstract VH createView(ViewGroup parent);
-
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         holder.bind(getItemAt(holder.ctx, position));

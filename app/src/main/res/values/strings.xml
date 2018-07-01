@@ -8,4 +8,5 @@
     <string name="cd_note_item_expand_button">Notiz auf- oder zuklappen</string>
     <string name="SpecificationButton">Erinnern wenn:</string>
     <string name="LabelButton">Label anlegen</string>
+    <string name="cd_note_item_edit_button">Notiz bearbeiten</string>
 </resources>

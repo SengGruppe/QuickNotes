@@ -36,14 +36,15 @@ public class LabelSelector extends RecyclerView {
 
     private void init(Context ctx) {
         setAdapter(new RecyclerAdapter<Label, LabelItem>() {
+            @NonNull
             @Override
-            public int getItemCount() {
-                return labels.size();
+            public LabelItem onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                return LabelItem.create(viewGroup);
             }
 
             @Override
-            public LabelItem createView(ViewGroup parent) {
-                return LabelItem.create(parent);
+            public int getItemCount() {
+                return labels.size();
             }
 
             @Override
