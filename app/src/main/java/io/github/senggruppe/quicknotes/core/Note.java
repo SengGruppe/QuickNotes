@@ -55,12 +55,12 @@ public class Note implements Serializable {
         return String.valueOf(content);
     }
 
-    public void setContent(String con) {
-        this.content = con;
-    }
-
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String con) {
+        this.content = con;
     }
 
     public File getAudioFile() {
@@ -77,5 +77,9 @@ public class Note implements Serializable {
 
     public List<Condition> getConditions() {
         return conditions;
+    }
+
+    public NotificationLevel getLevel() {
+        return level;
     }
 }

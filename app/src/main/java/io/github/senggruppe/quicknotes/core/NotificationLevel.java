@@ -1,23 +1,22 @@
 package io.github.senggruppe.quicknotes.core;
 
-import android.graphics.Color;
-
 import java.io.File;
-import java.time.Period;
 import java.util.List;
+
+import org.joda.time.Period;
 
 
 //TODO implement
-class NotificationLevel {
-    boolean vibrate;
-    String notification;
-    File sound;
-    List<Label> showLabels;
-    Color blink;
-    Period loop;
-    int howOften;
+public class NotificationLevel {
+    public boolean vibrate;
+    public String notification;
+    public File sound;
+    public List<Label> showLabels;
+    public int blink;
+    public Period loop;
+    public int howOften;
 
-    NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, Color blink, Period loop) {
+    NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, int blink, Period loop) {
         this.vibrate = vibrate;
         this.notification = notification;
         this.sound = sound;
@@ -27,7 +26,7 @@ class NotificationLevel {
         howOften = 1;
     }
 
-    NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, Color blink, Period loop, int howOften) {
+    NotificationLevel(boolean vibrate, String notification, File sound, List<Label> showLabels, int blink, Period loop, int howOften) {
         this.vibrate = vibrate;
         this.notification = notification;
         this.sound = sound;
