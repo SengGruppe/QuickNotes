@@ -56,6 +56,9 @@ public class NoteStorage {
         for (Label l : LabelStorage.get(ctx).getLabels()) {
             l.notes.remove(n);
         }
+        for (Condition c : n.getConditions()) {
+            c.cancleCondition(ctx);
+        }
         saveToFile(ctx);
         FragmentNotes.notifyDataSetChanged();
     }

@@ -49,6 +49,7 @@ public class TimeCondition implements Condition {
         return conditionTime;
     }
 
+    @Override
     public void cancleCondition(Context ctx) {
         Intent intent = new Intent(ctx, NotificationReceiver.class);
         intent.setAction(intentActionString);
