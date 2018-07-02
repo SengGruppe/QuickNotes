@@ -1,5 +1,6 @@
 package io.github.senggruppe.quicknotes.component;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.chip.Chip;
@@ -19,21 +20,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.activities.PopActivity;
 import io.github.senggruppe.quicknotes.core.Condition;
 import io.github.senggruppe.quicknotes.core.Label;
 import io.github.senggruppe.quicknotes.core.Note;
+import io.github.senggruppe.quicknotes.core.NoteStorage;
 import io.github.senggruppe.quicknotes.databinding.NoteItemBinding;
 import io.github.senggruppe.quicknotes.util.RecyclerAdapter;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
     private final NoteItemBinding binding;
+    private final Map<Label, Chip> labelMapping = new HashMap<>();
     private AudioPlayer player;
     private boolean isExpanded;
-    private final Map<Label, Chip> labelMapping = new HashMap<>();
     private Note note;
 
     private NoteItem(NoteItemBinding binding) {
@@ -50,9 +53,10 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
     @Override
     public void bind(Note el) {
         note = el;
+        note.bindToView(this);
 
         // Text
-        binding.noteItemTextContent.setText(el.content);
+        binding.noteItemTextContent.setText(el.getContent());
 
         // Labels
         labelMapping.clear();
@@ -62,12 +66,12 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
         }
 
         // Player
-        if (el.audioFile != null) {
+        if (el.getAudioFile() != null) {
             if (player == null) {
                 binding.noteItemContents.addView(player = new AudioPlayer(ctx), 0);
             }
             try {
-                player.setAudioFile(el.audioFile);
+                player.setAudioFile(el.getAudioFile());
             } catch (IOException e) {
                 Crashlytics.logException(e);
                 binding.noteItemContents.removeView(player);
@@ -82,9 +86,9 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
         }
 
         // Condition
-        if (el.conditions.size() > 0) {
+        if (el.getConditions().size() > 0) {
             StringBuilder sb = new StringBuilder();
-            for (Condition c : el.conditions) {
+            for (Condition c : el.getConditions()) {
                 sb.append(c.getDescription()).append(" & ");
             }
             binding.noteItemConditionSummary.setText(sb.substring(0, sb.toString().length() - 3));
@@ -93,7 +97,7 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
         }
 
         // timestamp
-        binding.noteItemCreation.setText(formatCreationDate(ctx, el.creationDate));
+        binding.noteItemCreation.setText(formatCreationDate(ctx, el.getCreationDate()));
     }
 
     public boolean isExpanded() {
@@ -115,7 +119,17 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
     }
 
     public void editNote() {
-        binding.getRoot().getContext().startActivity(new Intent(binding.getRoot().getContext(), PopActivity.class).putExtra("note", note));
+        Context ctx = binding.getRoot().getContext();
+        Activity a = Objects.requireNonNull(Utils.getActivity(binding.getRoot()));
+        Utils.startIntentForResult(a, new Intent(ctx, PopActivity.class).putExtra("note", note), (resultCode, data) -> {
+            try {
+                NoteStorage.get(ctx).removeNote(ctx, note);
+                NoteStorage.get(ctx).addNote(ctx, (Note) data.getSerializableExtra("note"));
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                Crashlytics.logException(e);
+            }
+        });
     }
 
     public void addLabel(Label l) {

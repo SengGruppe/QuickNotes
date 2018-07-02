@@ -4,5 +4,4 @@ public class Constants {
     private Constants() {
 
     }
-    public static final int PERMISSION_REQUEST = 1;
 }

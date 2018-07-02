@@ -1,7 +1,5 @@
 package io.github.senggruppe.quicknotes.core;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,32 +18,13 @@ import io.github.senggruppe.quicknotes.component.NoteItem;
  * A single note.
  */
 public class Note implements Serializable {
-    public final List<Condition> conditions = new ArrayList<>();
-    private final Set<Label> labels;
-    public String content;
-    public Date creationDate;
-    public NotificationLevel level;
-    public File audioFile;
+    private final List<Condition> conditions = new ArrayList<>();
+    private final Set<Label> labels = new HashSet<>();
+    private String content = "";
+    private Date creationDate = new Date();
+    private NotificationLevel level;
+    private File audioFile;
     private transient NoteItem boundView;
-
-    public Note(String content) {
-        this(content, null, null);
-    }
-
-    public Note(String content, @Nullable Set<Label> labels, File audioFile, NotificationLevel level) {
-        this(content, labels, audioFile);
-        this.level = level;
-    }
-
-    public Note(String content, @Nullable Set<Label> labels, File audioFile) {
-        this.audioFile = audioFile;
-        this.content = content;
-        creationDate = new Date();
-        this.labels = labels == null ? new HashSet<>() : labels;
-        for (Label l : this.labels) {
-            l.notes.add(this);
-        }
-    }
 
     public void bindToView(NoteItem view) {
         boundView = view;
@@ -80,4 +59,23 @@ public class Note implements Serializable {
         this.content = con;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public File getAudioFile() {
+        return audioFile;
+    }
+
+    public void setAudioFile(File audioFile) {
+        this.audioFile = audioFile;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public List<Condition> getConditions() {
+        return conditions;
+    }
 }

@@ -1,7 +1,9 @@
 package io.github.senggruppe.quicknotes.activities;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
@@ -11,8 +13,6 @@ import android.widget.SearchView;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import io.fabric.sdk.android.Fabric;
@@ -20,13 +20,12 @@ import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotes;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotificationLevels;
 import io.github.senggruppe.quicknotes.fragments.FragmentSettings;
-import io.github.senggruppe.quicknotes.util.function.Consumer;
+import io.github.senggruppe.quicknotes.util.Utils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Utils.PermissionResultHandler {
     private final SparseArray<Fragment> fragmentCache = new SparseArray<>();
     int currentMenu;
     private String searchText = "";
-    public final List<Consumer<String>> searchUpdaters = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,5 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
     public String getSearchText() {
         return searchText;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Utils.onActivityResult(requestCode, resultCode, data);
     }
 }

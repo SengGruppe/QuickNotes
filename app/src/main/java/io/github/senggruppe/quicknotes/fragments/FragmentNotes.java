@@ -37,14 +37,13 @@ import io.github.senggruppe.quicknotes.util.Utils;
 
 public class FragmentNotes extends Fragment {
     private static Runnable notifyDataSetChanged;
+    private FragmentNotesBinding b;
 
     public static void notifyDataSetChanged() {
         if (notifyDataSetChanged != null) {
             notifyDataSetChanged.run();
         }
     }
-
-    private FragmentNotesBinding b;
 
     @Nullable
     @Override
@@ -54,7 +53,7 @@ public class FragmentNotes extends Fragment {
             List<Note> filtered = new FilteredList<Note>(NoteStorage.get(getActivity()).getNotes()) {
                 @Override
                 public boolean allow(Note el) {
-                    return el.content.contains(((MainActivity) getActivity()).getSearchText());
+                    return el.getContent().contains(((MainActivity) getActivity()).getSearchText());
                 }
             };
 
@@ -92,6 +91,7 @@ public class FragmentNotes extends Fragment {
                     } else {
                         try {
                             NoteStorage.get(getActivity()).removeNote(getActivity(), ((NoteItem) viewHolder).getNote());
+                            Utils.showMessage(getActivity(), "Removed");
                         } catch (IOException | ClassNotFoundException e) {
                             new AlertDialog.Builder(getActivity()).setTitle("Could not remove note: " + e.getMessage()).show();
                             e.printStackTrace();
@@ -119,8 +119,14 @@ public class FragmentNotes extends Fragment {
         }
 
         b.AddButton.setOnClickListener(view -> {
-            Intent i = new Intent(getActivity().getApplicationContext(), PopActivity.class);
-            startActivity(i);
+            Intent i = new Intent(getActivity().getApplicationContext(), PopActivity.class).putExtra("note", new Note());
+            Utils.startIntentForResult(getActivity(), i, (resultCode, data) -> {
+                try {
+                    NoteStorage.get(getActivity()).addNote(getActivity(), (Note) data.getSerializableExtra("note"));
+                } catch (IOException | ClassNotFoundException e) {
+                    Crashlytics.logException(e);
+                }
+            });
         });
 
         return b.getRoot();
