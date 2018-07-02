@@ -9,4 +9,5 @@
     <string name="SpecificationButton">Erinnern wenn:</string>
     <string name="LabelButton">Label anlegen</string>
     <string name="cd_note_item_edit_button">Notiz bearbeiten</string>
+    <string name="switch_text">benachrichtigen</string>
 </resources>

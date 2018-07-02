@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
+
 
 import com.crashlytics.android.Crashlytics;
 
@@ -70,6 +72,7 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
         player = findViewById(R.id.activity_pop_player);
         Button specificationButton = findViewById(R.id.SpecifyButton);
         Button addLabelButton = findViewById(R.id.AddLabelButton);
+        Switch notifySwitch = findViewById(R.id.notifySwitch);
 
 
         /*datePickButton.setOnClickListener((View View) -> {
@@ -87,10 +90,13 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
                     calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, 1);
                 }
-                Condition timeCondition = TimeCondition.setupTimedNotification(this, addedNote, calendar);
-                addedNote.conditions.add(timeCondition);
+                if (notifySwitch.isChecked()) {
+                    Condition timeCondition = TimeCondition.setupTimedNotification(this, addedNote, calendar);
+                    addedNote.conditions.add(timeCondition);
+                }
                 NoteStorage.get(this).addNote(this, addedNote);
                 FragmentNotes.notifyDataSetChanged();
+
 
 
 
