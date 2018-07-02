@@ -2,8 +2,10 @@ package io.github.senggruppe.quicknotes.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -18,48 +20,43 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
-
 import com.crashlytics.android.Crashlytics;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Objects;
 
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.component.AudioPlayer;
 import io.github.senggruppe.quicknotes.core.Condition;
 import io.github.senggruppe.quicknotes.core.Note;
-import io.github.senggruppe.quicknotes.core.NoteStorage;
 import io.github.senggruppe.quicknotes.core.conditions.TimeCondition;
 import io.github.senggruppe.quicknotes.fragments.DatePickerFragment;
-import io.github.senggruppe.quicknotes.fragments.FragmentNotes;
 import io.github.senggruppe.quicknotes.fragments.TimePickerFragment;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 
 public class PopActivity extends AppCompatActivity implements Utils.PermissionResultHandler, OnMenuItemClickListener {
-    Calendar calendar = null;
+    Calendar calendar;
     private MediaRecorder recorder;
-    private File audioMessage;
+    private File audioFile;
     private AudioPlayer player;
+    private Note note;
+    private EditText editNote;
+    private Switch notifySwitch;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Note noteToEdit = (Note) getIntent().getSerializableExtra("note");
-
         setContentView(R.layout.activity_pop);
 
+        // Set activity appearance
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        int width = dm.widthPixels;
-        int height = dm.heightPixels;
-
-        getWindow().setLayout((int) (width * .8), (int) (height * .7));
+        getWindow().setLayout((int) (dm.widthPixels * .8), (int) (dm.heightPixels * .7));
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
@@ -68,54 +65,25 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
 
         getWindow().setAttributes(params);
 
-        EditText editNote = findViewById(R.id.noteText);
-        if (noteToEdit != null) {
-            editNote.setText(noteToEdit.content);
-        }
+        // components
+        note = Objects.requireNonNull((Note) getIntent().getSerializableExtra("note"));
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+
+        editNote = findViewById(R.id.noteText);
         Button saveButton = findViewById(R.id.saveButton);
         FloatingActionButton btnRecord = findViewById(R.id.btnRecord);
-
         player = findViewById(R.id.activity_pop_player);
-       // Button specificationButton = findViewById(R.id.SpecifyButton);
+        notifySwitch = findViewById(R.id.notifySwitch);
+        // Button specificationButton = findViewById(R.id.SpecifyButton);
         //Button addLabelButton = findViewById(R.id.AddLabelButton);
-        Switch notifySwitch = findViewById(R.id.notifySwitch);
 
-        saveButton.setOnClickListener(View -> {
-            try {
-                Note addedNote;
-                if (noteToEdit != null) {
-                   // noteToEdit.setContent(editNote.getText().toString());
-                    addedNote = noteToEdit;
-                } else {
-                    addedNote = new Note(editNote.getText().toString(), null, audioMessage);
-                }
-                if (calendar == null) {
-                    calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DATE, 1);
-                }
-                if (notifySwitch.isChecked()) {
-                    Condition timeCondition = TimeCondition.setupTimedNotification(this, addedNote, calendar);
-                    addedNote.conditions.add(timeCondition);
-                }
-                if (noteToEdit != null) {
-                    NoteStorage.get(this).replaceNote(this, noteToEdit, addedNote);
+        // fill
+        editNote.setText(note.getContent());
+        notifySwitch.setChecked(note.getConditions().size() > 0); // temporary as we don't have more notification settings
 
-                } else {
-                    NoteStorage.get(this).addNote(this, addedNote);
-                }
-
-                FragmentNotes.notifyDataSetChanged();
-
-
-
-
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-            }
-            this.finish();
-
-        });
-
+        // actions
+        saveButton.setOnClickListener(v -> saveAndExit());
         btnRecord.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                 startRecord();
@@ -125,12 +93,34 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
             return true;
         });
     }
+
+    private void saveAndExit() {
+        note.setContent(editNote.getText().toString());
+        note.setAudioFile(audioFile);
+
+        for (Condition c : note.getConditions()) {
+            if (c instanceof TimeCondition) {
+                ((TimeCondition) c).cancleCondition(this);
+                note.getConditions().remove(c);
+                break;
+            }
+        }
+        if (notifySwitch.isChecked()) {
+            Condition timeCondition = TimeCondition.setupTimedNotification(this, note, calendar);
+            note.getConditions().add(timeCondition);
+        }
+
+        setResult(RESULT_OK, new Intent().putExtra("note", note));
+        finish();
+    }
+
     public void showPopUp(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.specification_popup);
         popup.show();
     }
+
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
@@ -149,15 +139,13 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
         }
     }
 
-
-
     private void stopRecord() {
         if (recorder != null) {
             recorder.stop();
             recorder.release();
             recorder = null;
             try {
-                player.setAudioFile(audioMessage);
+                player.setAudioFile(audioFile);
             } catch (IOException e) {
                 Crashlytics.logException(e);
                 e.printStackTrace();
@@ -172,11 +160,11 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
                 recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                 recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                if (audioMessage != null) {
-                    audioMessage.delete();
+                if (audioFile != null) {
+                    audioFile.delete();
                 }
-                audioMessage = new File(this.getFilesDir().getAbsolutePath(), System.currentTimeMillis() + ".3gp");
-                recorder.setOutputFile(new FileOutputStream(audioMessage).getFD());
+                audioFile = new File(this.getFilesDir().getAbsolutePath(), System.currentTimeMillis() + ".3gp");
+                recorder.setOutputFile(new FileOutputStream(audioFile).getFD());
                 recorder.prepare();
                 recorder.start();
             } catch (IOException e) {
@@ -195,22 +183,18 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
             recorder = null;
         }
     }
+
     public void updateDate(Calendar c) {
-        if (calendar != null) {
-            calendar.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-        } else {
-            calendar = c;
-        }
+        calendar.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
     }
 
     public void updateTime(Calendar c) {
-        if (calendar != null) {
-            calendar.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY));
-            calendar.set(Calendar.MINUTE, c.get(Calendar.MINUTE));
-        } else {
-            calendar = c;
-        }
+        calendar.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, c.get(Calendar.MINUTE));
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Utils.onActivityResult(requestCode, resultCode, data);
+    }
 }

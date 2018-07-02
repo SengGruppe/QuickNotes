@@ -2,28 +2,39 @@ package io.github.senggruppe.quicknotes.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.senggruppe.quicknotes.R;
+import io.github.senggruppe.quicknotes.util.function.BiConsumer;
 import io.github.senggruppe.quicknotes.util.function.Consumer;
 
 public class Utils {
-    private static Runnable onSuccess;
-    private static Consumer<List<String>> onFailed;
+    private static final AtomicInteger nextId = new AtomicInteger();
+    private static final SparseArray<BiConsumer<Integer, Intent>> intentResultHandlers = new SparseArray<>();
+    private static final SparseArray<Runnable> permissionSuccessHandlers = new SparseArray<>();
+    private static final SparseArray<Consumer<List<String>>> permissionFailedHandlers = new SparseArray<>();
+
     private Utils() {
 
     }
+
     @SafeVarargs
     public static <T> T orDefault(T... v) {
         for (T e : v) {
@@ -63,16 +74,20 @@ public class Utils {
         }
         for (String perm : perms) {
             if (ActivityCompat.checkSelfPermission(ctx, perm) != PackageManager.PERMISSION_GRANTED) {
-                if (Utils.onSuccess != null || Utils.onFailed != null) {
-                    Crashlytics.logException(new IllegalStateException("request runnables still filled!"));
-                }
-                Utils.onSuccess = onSuccess;
-                Utils.onFailed = onFailed;
-                ActivityCompat.requestPermissions(ctx, perms, Constants.PERMISSION_REQUEST);
+                int id = nextId.incrementAndGet();
+                permissionSuccessHandlers.put(id, onSuccess);
+                permissionFailedHandlers.put(id, onFailed);
+                ActivityCompat.requestPermissions(ctx, perms, id);
                 return;
             }
             onSuccess.run();
         }
+    }
+
+    public static void startIntentForResult(Activity ctx, Intent intent, @NotNull BiConsumer<Integer, Intent> resultHandler) {
+        int id = nextId.incrementAndGet();
+        intentResultHandlers.put(id, resultHandler);
+        ctx.startActivityForResult(intent, id);
     }
 
     public static void setViewAndChildrenEnabled(View view, boolean enabled) {
@@ -86,23 +101,52 @@ public class Utils {
         }
     }
 
+    public static Activity getActivity(View v) {
+        Context context = v.getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
+    }
+
+    /**
+     * For being called by the activity's onActivityResult
+     */
+    public static boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        BiConsumer<Integer, Intent> handler = intentResultHandlers.get(requestCode);
+        if (handler != null) {
+            handler.accept(resultCode, data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public interface PermissionResultHandler extends ActivityCompat.OnRequestPermissionsResultCallback {
         default void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            if (requestCode == Constants.PERMISSION_REQUEST) {
+            Runnable onSuccess = permissionSuccessHandlers.get(requestCode);
+            Consumer<List<String>> onFailed = permissionFailedHandlers.get(requestCode);
+            if (onSuccess != null && onFailed != null) {
                 List<String> res = new ArrayList<>();
                 if (permissions.length == 0) {
                     onFailed.accept(res);
-                }
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                        res.add(permissions[i]);
+                } else {
+                    for (int i = 0; i < permissions.length; i++) {
+                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                            res.add(permissions[i]);
+                        }
+                    }
+                    if (res.isEmpty()) {
+                        onSuccess.run();
+                    } else {
+                        onFailed.accept(res);
                     }
                 }
-                if (res.isEmpty()) {
-                    onSuccess.run();
-                } else {
-                    onFailed.accept(res);
-                }
+            } else if (onSuccess != null || onFailed != null) {
+                Crashlytics.logException(new IllegalStateException("permission request only has one handler!"));
             }
         }
     }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import io.github.senggruppe.quicknotes.core.Condition;
 import io.github.senggruppe.quicknotes.core.Note;
@@ -25,14 +26,14 @@ public class TimeCondition implements Condition {
 
     public static TimeCondition setupTimedNotification(Context ctx, Note dataForNotes, Calendar time) {
         String intentActionString = "notificationIntent:" + System.currentTimeMillis();
-        String noteContent = dataForNotes.content;
+        String noteContent = dataForNotes.getContent();
         time.set(Calendar.SECOND, 0);
         Intent intent = new Intent(ctx, NotificationReceiver.class);
         intent.setAction(intentActionString);
         intent.putExtra("Note", noteContent);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
 
-        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am = Objects.requireNonNull((AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE));
         am.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
 
         return new TimeCondition(time.getTime().toString(), intentActionString, noteContent);
