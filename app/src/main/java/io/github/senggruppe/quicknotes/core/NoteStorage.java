@@ -47,6 +47,12 @@ public class NoteStorage {
         saveToFile(ctx);
         FragmentNotes.notifyDataSetChanged();
     }
+    public void replaceNote(Context ctx, Note oldN, Note newN) throws IOException {
+        int tmp = notes.indexOf(oldN);
+        notes.set(tmp, newN);
+        saveToFile(ctx);
+        FragmentNotes.notifyDataSetChanged();
+    }
 
     public void removeNote(Context ctx, Note n) throws IOException, ClassNotFoundException {
         if (n.audioFile != null) {

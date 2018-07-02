@@ -48,6 +48,9 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Note noteToEdit = (Note) getIntent().getSerializableExtra("note");
+
         setContentView(R.layout.activity_pop);
 
         DisplayMetrics dm = new DisplayMetrics();
@@ -66,26 +69,26 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
         getWindow().setAttributes(params);
 
         EditText editNote = findViewById(R.id.noteText);
+        if (noteToEdit != null) {
+            editNote.setText(noteToEdit.content);
+        }
         Button saveButton = findViewById(R.id.saveButton);
         FloatingActionButton btnRecord = findViewById(R.id.btnRecord);
 
         player = findViewById(R.id.activity_pop_player);
-        Button specificationButton = findViewById(R.id.SpecifyButton);
-        Button addLabelButton = findViewById(R.id.AddLabelButton);
+       // Button specificationButton = findViewById(R.id.SpecifyButton);
+        //Button addLabelButton = findViewById(R.id.AddLabelButton);
         Switch notifySwitch = findViewById(R.id.notifySwitch);
 
-
-        /*datePickButton.setOnClickListener((View View) -> {
-            DatePickerFragment newFragment = new DatePickerFragment();
-            newFragment.show(getSupportFragmentManager(), "datePicker");
-        });
-        timePickButton.setOnClickListener(View -> {
-            TimePickerFragment newFragment = new TimePickerFragment();
-            newFragment.show(getSupportFragmentManager(), "timePicker");
-        });*/
         saveButton.setOnClickListener(View -> {
             try {
-                Note addedNote = new Note(editNote.getText().toString(), null, audioMessage);
+                Note addedNote;
+                if (noteToEdit != null) {
+                   // noteToEdit.setContent(editNote.getText().toString());
+                    addedNote = noteToEdit;
+                } else {
+                    addedNote = new Note(editNote.getText().toString(), null, audioMessage);
+                }
                 if (calendar == null) {
                     calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, 1);
@@ -94,7 +97,13 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
                     Condition timeCondition = TimeCondition.setupTimedNotification(this, addedNote, calendar);
                     addedNote.conditions.add(timeCondition);
                 }
-                NoteStorage.get(this).addNote(this, addedNote);
+                if (noteToEdit != null) {
+                    NoteStorage.get(this).replaceNote(this, noteToEdit, addedNote);
+
+                } else {
+                    NoteStorage.get(this).addNote(this, addedNote);
+                }
+
                 FragmentNotes.notifyDataSetChanged();
 
 

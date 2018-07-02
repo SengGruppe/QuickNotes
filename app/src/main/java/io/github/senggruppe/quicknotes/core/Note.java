@@ -75,4 +75,9 @@ public class Note implements Serializable {
     public String toString() {
         return String.valueOf(content);
     }
+
+    public void setContent(String con) {
+        this.content = con;
+    }
+
 }
