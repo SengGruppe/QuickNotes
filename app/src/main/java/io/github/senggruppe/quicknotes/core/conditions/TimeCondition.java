@@ -30,7 +30,7 @@ public class TimeCondition implements Condition {
         time.set(Calendar.SECOND, 0);
         Intent intent = new Intent(ctx, NotificationReceiver.class);
         intent.setAction(intentActionString);
-        intent.putExtra("Note", noteContent);
+        intent.putExtra("note", dataForNotes);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
 
         AlarmManager am = Objects.requireNonNull((AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE));
