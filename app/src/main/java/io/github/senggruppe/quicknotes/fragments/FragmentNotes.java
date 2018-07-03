@@ -87,6 +87,12 @@ public class FragmentNotes extends Fragment {
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     if (direction == ItemTouchHelper.LEFT) {
                         Utils.showMessage(getActivity(), "Archived");
+                        try {
+                            ((NoteItem) viewHolder).getNote().addLabel(LabelStorage.get(getActivity()).getOrCreate(getActivity(), "Archived"));
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                        }
                     } else {
                         try {
                             NoteStorage.get(getActivity()).removeNote(getActivity(), ((NoteItem) viewHolder).getNote());

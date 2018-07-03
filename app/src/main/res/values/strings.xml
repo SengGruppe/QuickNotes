@@ -10,4 +10,6 @@
     <string name="LabelButton">Label anlegen</string>
     <string name="cd_note_item_edit_button">Notiz bearbeiten</string>
     <string name="switch_text">benachrichtigen</string>
+    <string name="datum">Datum</string>
+    <string name="zeit">Zeit</string>
 </resources>
