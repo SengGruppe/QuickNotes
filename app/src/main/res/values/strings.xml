@@ -6,11 +6,11 @@
     <string name="save_button">Speichern</string>
     <string name="hint">Bitte Notiz eingeben</string>
     <string name="cd_note_item_expand_button">Notiz auf- oder zuklappen</string>
-    <string name="SpecificationButton">Erinnern wenn:</string>
+    <string name="SpecificationButton">erinnern:</string>
     <string name="LabelButton">Labels</string>
     <string name="cd_note_item_edit_button">Notiz bearbeiten</string>
     <string name="switch_text">benachrichtigen</string>
     <string name="datum">Datum</string>
     <string name="zeit">Zeit</string>
-    <string name="audiopl_not_initialized">Whoops… Could not init audio player</string>
+    <string name="audiopl_not_initialized">Whoops… Audioplayer nicht initialisierbar</string>
 </resources>
