@@ -17,7 +17,7 @@ public class Label implements Serializable {
     public final int color;
     public final Set<Note> notes;
 
-    private Label(Context ctx, String text, int color) throws IOException, ClassNotFoundException {
+    protected Label(Context ctx, String text, int color) throws IOException, ClassNotFoundException {
         this.text = text;
         this.color = color;
         notes = new HashSet<>();

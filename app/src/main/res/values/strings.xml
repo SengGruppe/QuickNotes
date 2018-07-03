@@ -12,4 +12,5 @@
     <string name="switch_text">benachrichtigen</string>
     <string name="datum">Datum</string>
     <string name="zeit">Zeit</string>
+    <string name="audiopl_not_initialized">Whoops… Could not init audio player</string>
 </resources>

@@ -31,6 +31,8 @@ import java.util.Objects;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.component.AudioPlayer;
 import io.github.senggruppe.quicknotes.core.Condition;
+import io.github.senggruppe.quicknotes.core.Label;
+import io.github.senggruppe.quicknotes.core.LabelStorage;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.conditions.TimeCondition;
 import io.github.senggruppe.quicknotes.fragments.DatePickerFragment;
@@ -114,11 +116,24 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
         finish();
     }
 
-    public void showPopUp(View v) {
+    public void showPopUpConditions(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.specification_popup);
+        popup.inflate(R.menu.specification_popup_condition);
         popup.show();
+    }
+    public void showPopUpLabels(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        try {
+            for (Label l : LabelStorage.get(this).getLabels()) {
+                popup.getMenu().add(l.toString());
+                popup.show();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

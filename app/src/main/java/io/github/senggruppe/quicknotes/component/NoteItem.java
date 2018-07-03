@@ -3,6 +3,7 @@ package io.github.senggruppe.quicknotes.component;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.support.design.chip.Chip;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +77,7 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
                 Crashlytics.logException(e);
                 binding.noteItemContents.removeView(player);
                 TextView replacement = new TextView(ctx);
-                replacement.setText("Whoops... Could not init audio player");
+                replacement.setText(R.string.audiopl_not_initialized);
                 binding.noteItemContents.addView(replacement, 0);
             }
         } else if (player != null) {
@@ -140,7 +141,7 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
         }
         Chip c = new Chip(ctx);
         c.setText(l.text);
-        c.setBackgroundColor(l.color);
+        c.setChipBackgroundColor(ColorStateList.valueOf(l.color));
         labelMapping.put(l, c);
         binding.noteItemLabels.addView(c);
     }

@@ -1,6 +1,7 @@
 package io.github.senggruppe.quicknotes.core;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import java.io.EOFException;
 import java.io.File;
@@ -89,5 +90,21 @@ public class LabelStorage {
         }
         labels.clear();
         labels.addAll(tmp);
+    }
+    public Label getOrCreate(Context ctx, String s) throws IOException, ClassNotFoundException {
+        int color = Color.HSVToColor(new float[]{(float) (Math.random() * 360), 0.5f, 1});
+        return getOrCreate(ctx, s, color);
+    }
+    public Label getOrCreate(Context ctx, String s, int color)throws IOException, ClassNotFoundException {
+        for (Label l : labels) {
+            if (l.toString().equals(s)) {
+                return l;
+            }
+        }
+
+        Label tmp = new Label(ctx, s, color);
+        addLabel(ctx, tmp);
+        return tmp;
+
     }
 }
