@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +25,6 @@ import java.util.Objects;
 import io.github.senggruppe.quicknotes.activities.MainActivity;
 import io.github.senggruppe.quicknotes.activities.PopActivity;
 import io.github.senggruppe.quicknotes.component.NoteItem;
-import io.github.senggruppe.quicknotes.core.Label;
 import io.github.senggruppe.quicknotes.core.LabelStorage;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.core.NoteStorage;
@@ -106,12 +104,6 @@ public class FragmentNotes extends Fragment {
                     getDefaultUIUtil().onDraw(c, recyclerView, ((NoteItem) viewHolder).itemView, dX, dY, actionState, isCurrentlyActive);
                 }
             }).attachToRecyclerView(b.notelist);
-
-            try {
-                LabelStorage.get(getActivity()).addLabel(getActivity(), new Label("TEST", Color.GREEN));
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
 
             b.labelSelector.labels = LabelStorage.get(getActivity()).getLabels();
         } catch (Exception e) {
