@@ -79,7 +79,11 @@ public class Note implements Serializable {
         return conditions;
     }
 
-    public NotificationLevel getLevel() {
+    public NotificationLevel getNotificationLevel() {
         return level;
+    }
+
+    public void setNotificationLevel(NotificationLevel notificationLevel) {
+        this.level = notificationLevel;
     }
 }

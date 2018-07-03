@@ -28,11 +28,6 @@
             android:enabled="true">
             <intent-filter> <action android:name="NOTIFICATION_SERVICE" /></intent-filter>
         </receiver>
-        <service
-            android:name=".notifications.UserNotifier"
-            android:enabled="true">
-            <intent-filter> <action android:name="NOTIFICATION_SERVICE" /></intent-filter>
-        </service>
     </application>
 
 </manifest>

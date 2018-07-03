@@ -1,49 +1,29 @@
 package io.github.senggruppe.quicknotes.core.conditions;
 
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
 import io.github.senggruppe.quicknotes.core.Condition;
 import io.github.senggruppe.quicknotes.core.Note;
 import io.github.senggruppe.quicknotes.notifications.NotificationReceiver;
+import io.github.senggruppe.quicknotes.util.Constants;
 
 public class TimeCondition implements Condition {
-    private String conditionTime;
+    private final Date aim;
+    private Note boundNote;
     private String intentActionString;
-    private String noteContent;
 
-    private TimeCondition(String time, String intentActionString, String noteContent) {
-        conditionTime = time;
-        this.intentActionString = intentActionString;
-        this.noteContent = noteContent;
-    }
-
-    public static TimeCondition setupTimedNotification(Context ctx, Note dataForNotes, Calendar time) {
-        String intentActionString = "notificationIntent:" + System.currentTimeMillis();
-        String noteContent = dataForNotes.getContent();
-        time.set(Calendar.SECOND, 0);
-        Intent intent = new Intent(ctx, NotificationReceiver.class);
-        intent.setAction(intentActionString);
-        intent.putExtra("note", dataForNotes);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
-
-        AlarmManager am = Objects.requireNonNull((AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE));
-        am.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
-
-        String t = "" + time.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN) + " "
-                + time.get(Calendar.DAY_OF_MONTH) + " "
-                + time.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.GERMAN) + " " + time.get(Calendar.HOUR)
-                + ":" + (time.get(Calendar.MINUTE) < 10 ? "0" + time.get(Calendar.MINUTE) : time.get(Calendar.MINUTE))
-                + " " + time.get(Calendar.YEAR);
-
-        return new TimeCondition(t, intentActionString, noteContent);
+    public TimeCondition(Date aim, Note note) {
+        this.aim = new Date((aim.getTime() / 1000) * 1000); // set seconds to 0
+        this.boundNote = Objects.requireNonNull(note);
     }
 
     @Override
@@ -51,16 +31,22 @@ public class TimeCondition implements Condition {
         return "TimeCondition";
     }
 
-    @Override
+    @Override // FIXME: Use JodaTime for localization
     public String getDescription() {
-        return conditionTime;
+        Calendar time = Calendar.getInstance();
+        time.setTime(aim);
+        return time.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN) + " "
+                + time.get(Calendar.DAY_OF_MONTH) + " "
+                + time.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.GERMAN) + " " + time.get(Calendar.HOUR_OF_DAY)
+                + ":" + (time.get(Calendar.MINUTE) < 10 ? "0" + time.get(Calendar.MINUTE) : time.get(Calendar.MINUTE))
+                + " " + time.get(Calendar.YEAR);
     }
 
     @Override
-    public void cancleCondition(Context ctx) {
+    public void cancelCondition(Context ctx) {
         Intent intent = new Intent(ctx, NotificationReceiver.class);
         intent.setAction(intentActionString);
-        intent.putExtra("Note", noteContent);
+        intent.putExtra("note", boundNote);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
 
         AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
@@ -69,4 +55,18 @@ public class TimeCondition implements Condition {
         }
     }
 
+    @Override
+    public void startCondition(Context ctx) {
+        cancelCondition(ctx); // if already running
+
+        Bundle b = new Bundle();
+        b.putSerializable(Constants.KEY_NOTE, boundNote);
+        Intent intent = new Intent(ctx, NotificationReceiver.class)
+                .setAction(intentActionString = "notificationIntent:" + System.currentTimeMillis())
+                .putExtra(Constants.KEY_NOTE, b);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
+
+        AlarmManager am = Objects.requireNonNull((AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE));
+        am.setExact(AlarmManager.RTC_WAKEUP, aim.getTime(), pendingIntent);
+    }
 }

@@ -19,7 +19,6 @@ import io.fabric.sdk.android.Fabric;
 import io.github.senggruppe.quicknotes.R;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotes;
 import io.github.senggruppe.quicknotes.fragments.FragmentNotificationLevels;
-import io.github.senggruppe.quicknotes.fragments.FragmentSettings;
 import io.github.senggruppe.quicknotes.util.Utils;
 
 public class MainActivity extends AppCompatActivity implements Utils.PermissionResultHandler {
@@ -53,9 +52,9 @@ public class MainActivity extends AppCompatActivity implements Utils.PermissionR
                     case R.id.btnNotes:
                         f = new FragmentNotes();
                         break;
-                    case R.id.btnSettings:
+                    /*case R.id.btnSettings:
                         f = new FragmentSettings();
-                        break;
+                        break;*/
                 }
                 if (f == null) {
                     Crashlytics.logException(new Exception("No menu found!"));

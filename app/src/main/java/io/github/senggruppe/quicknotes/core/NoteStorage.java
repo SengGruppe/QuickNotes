@@ -57,7 +57,7 @@ public class NoteStorage {
             l.notes.remove(n);
         }
         for (Condition c : n.getConditions()) {
-            c.cancleCondition(ctx);
+            c.cancelCondition(ctx);
         }
         saveToFile(ctx);
         FragmentNotes.notifyDataSetChanged();

@@ -4,15 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import java.io.Serializable;
+import java.util.Objects;
+
+import io.github.senggruppe.quicknotes.core.Note;
+import io.github.senggruppe.quicknotes.util.Constants;
 
 public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent toUserNotifier = new Intent(context, UserNotifier.class);
-        Serializable n = intent.getExtras().getSerializable("note");
-        toUserNotifier.setAction("actionstring" + System.currentTimeMillis());
-        toUserNotifier.putExtra("note", n);
-        context.startService(toUserNotifier);
+        Note n = (Note) Objects.requireNonNull(intent.getBundleExtra(Constants.KEY_NOTE).getSerializable(Constants.KEY_NOTE));
+        if (n.getNotificationLevel() != null) {
+            n.getNotificationLevel().execute(context, n);
+        }
     }
 }

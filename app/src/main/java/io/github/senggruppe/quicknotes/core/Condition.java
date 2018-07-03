@@ -8,5 +8,14 @@ public interface Condition extends Serializable {
     String getType();
 
     String getDescription();
-    void cancleCondition(Context ctx);
+
+    /*
+     * Cancel the (possible running/planned) condition
+     */
+    void cancelCondition(Context ctx);
+
+    /*
+     * Plan the new condition (e.g. setup timer for TimeCondition
+     */
+    void startCondition(Context ctx);
 }

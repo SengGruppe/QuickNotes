@@ -34,6 +34,7 @@ import io.github.senggruppe.quicknotes.core.Condition;
 import io.github.senggruppe.quicknotes.core.Label;
 import io.github.senggruppe.quicknotes.core.LabelStorage;
 import io.github.senggruppe.quicknotes.core.Note;
+import io.github.senggruppe.quicknotes.core.NotificationLevel;
 import io.github.senggruppe.quicknotes.core.conditions.TimeCondition;
 import io.github.senggruppe.quicknotes.fragments.DatePickerFragment;
 import io.github.senggruppe.quicknotes.fragments.TimePickerFragment;
@@ -101,16 +102,19 @@ public class PopActivity extends AppCompatActivity implements Utils.PermissionRe
         note.setAudioFile(audioFile);
 
         for (Condition c : note.getConditions()) {
-            if (c instanceof TimeCondition) {
-                ((TimeCondition) c).cancleCondition(this);
-                note.getConditions().remove(c);
-                break;
-            }
+            c.cancelCondition(this);
         }
+        note.getConditions().clear();
+
+        note.setNotificationLevel(NotificationLevel.DEFAULT);
+
+
         if (notifySwitch.isChecked()) {
-            Condition timeCondition = TimeCondition.setupTimedNotification(this, note, calendar);
+            Condition timeCondition = new TimeCondition(calendar.getTime(), note);
+            timeCondition.startCondition(this);
             note.getConditions().add(timeCondition);
         }
+
 
         setResult(RESULT_OK, new Intent().putExtra("note", note));
         finish();

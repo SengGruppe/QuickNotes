@@ -8,8 +8,8 @@
         android:id="@+id/btnNotes"
         android:icon="@drawable/ic_note"
         android:title="Notizen" />
-    <item
+    <!--item
         android:id="@+id/btnSettings"
         android:icon="@drawable/ic_settings"
-        android:title="Einstellungen" />
+        android:title="Einstellungen" /-->
 </menu>
