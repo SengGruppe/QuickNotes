@@ -1,5 +1,6 @@
 package io.github.senggruppe.quicknotes.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -113,10 +114,12 @@ public class FragmentNotes extends Fragment {
         b.AddButton.setOnClickListener(view -> {
             Intent i = new Intent(getActivity().getApplicationContext(), PopActivity.class).putExtra("note", new Note());
             Utils.startIntentForResult(getActivity(), i, (resultCode, data) -> {
-                try {
-                    NoteStorage.get(getActivity()).addNote(getActivity(), (Note) data.getSerializableExtra("note"));
-                } catch (IOException | ClassNotFoundException e) {
-                    Crashlytics.logException(e);
+                if (resultCode.equals(Activity.RESULT_OK)) {
+                    try {
+                        NoteStorage.get(getActivity()).addNote(getActivity(), (Note) data.getSerializableExtra("note"));
+                    } catch (IOException | ClassNotFoundException e) {
+                        Crashlytics.logException(e);
+                    }
                 }
             });
         });

@@ -122,12 +122,14 @@ public class NoteItem extends RecyclerAdapter.ViewHolder<Note> {
         Context ctx = binding.getRoot().getContext();
         Activity a = Objects.requireNonNull(Utils.getActivity(binding.getRoot()));
         Utils.startIntentForResult(a, new Intent(ctx, PopActivity.class).putExtra("note", note), (resultCode, data) -> {
-            try {
-                NoteStorage.get(ctx).removeNote(ctx, note);
-                NoteStorage.get(ctx).addNote(ctx, (Note) data.getSerializableExtra("note"));
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                Crashlytics.logException(e);
+            if (resultCode.equals(Activity.RESULT_OK)) {
+                try {
+                    NoteStorage.get(ctx).removeNote(ctx, note);
+                    NoteStorage.get(ctx).addNote(ctx, (Note) data.getSerializableExtra("note"));
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                    Crashlytics.logException(e);
+                }
             }
         });
     }
