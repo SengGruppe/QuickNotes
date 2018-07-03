@@ -40,7 +40,8 @@ public class TimeCondition implements Condition {
         String t = "" + time.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN) + " "
                 + time.get(Calendar.DAY_OF_MONTH) + " "
                 + time.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.GERMAN) + " " + time.get(Calendar.HOUR)
-                + ":" + time.get(Calendar.MINUTE) + " " + time.get(Calendar.YEAR);
+                + ":" + (time.get(Calendar.MINUTE) < 10 ? "0" + time.get(Calendar.MINUTE) : time.get(Calendar.MINUTE))
+                + " " + time.get(Calendar.YEAR);
 
         return new TimeCondition(t, intentActionString, noteContent);
     }
