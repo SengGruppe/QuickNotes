@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.github.senggruppe.quicknotes.core.Condition;
@@ -36,7 +38,12 @@ public class TimeCondition implements Condition {
         AlarmManager am = Objects.requireNonNull((AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE));
         am.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
 
-        return new TimeCondition(time.getTime().toString(), intentActionString, noteContent);
+        String t = "" + time.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN) + " "
+                + time.get(Calendar.DAY_OF_MONTH) + " "
+                + time.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.GERMAN) + " " + time.get(Calendar.HOUR)
+                + ":" + time.get(Calendar.MINUTE) + " " + time.get(Calendar.YEAR);
+
+        return new TimeCondition(t, intentActionString, noteContent);
     }
 
     @Override
